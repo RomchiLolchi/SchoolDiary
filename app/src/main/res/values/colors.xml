@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <!--Цвета для layout'ов создания урока и карточек урока-->
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorRed">#f58383</color>
+    <color name="colorOrange">#fec84c</color>
+    <color name="colorYellow">#fffa6d</color>
+    <color name="colorGreen">#b0ee67</color>
+    <color name="colorBlue">#8bdbff</color>
+    <color name="colorPink">#ffb4e0</color>
+    <color name="colorViolet">#c7a4ff</color>
+    <!--Цвет для затемнения заднего layout'а-->
+    <color name="colorBackgroundGray">#6F404040</color>
+</resources>

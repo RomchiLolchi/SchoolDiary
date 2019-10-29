@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Школьный дневник</string>
+    <string name="diary_text">ДНЕВНИК</string>
+    <string name="fill_timetable">ЗАПОЛНИТЕ РАСПИСАНИЕ УРОКОВ НА НЕДЕЛЮ</string>
+    <string name="notes_text">ЗАМЕТКИ</string>
+    <string name="create_note">СОЗДАЙТЕ ВАЖНЫЕ ЗАМЕТКИ</string>
+    <string name="timetable_descr_text">Пока Вы не заполните расписание до конца, в этом окне ничего не изменится</string>
+    <string name="lessons_name_text">Название урока</string>
+    <string name="choose_date_text">Укажите дату урока</string>
+    <string name="choose_time_text">Укажите время начала урока</string>
+    <string name="insert_teachers_name_text">Введите имя учителя</string>
+    <string name="attachments_text">Вложения:</string>
+    <string name="rating_text">Оценки:</string>
+    <string name="homework_text">Введите домашнее задание</string>
+    <string name="create_lesson_text">Создать урок</string>
+    <string name="add_lesson_text">Добавить урок</string>
+    <string name="number_lesson_text">Номер урока</string>
+    <string name="max_ratings_error">Нельзя поставить больше двух оценок</string>
+    <string name="time_text">Время начала урока:</string>
+    <string name="date_text">Дата урока:</string>
+    <string name="lesson_add_text">Урок добавлен!</string>
+    <string name="your_timetable">Ваше распиание на данный момент:</string>
+    <!-- Переменные дней недели -->
+    <string name="monday_text">Понедельник</string>
+    <string name="tuesday_text">Вторник</string>
+    <string name="wednesday_text">Среда</string>
+    <string name="thursday_text">Четверг</string>
+    <string name="friday_text">Пятница</string>
+    <string name="saturday_text">Суббота</string>
+</resources>

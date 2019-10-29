@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">School Diary</string>
+    <string name="diary_text">DIARY</string>
+    <string name="fill_timetable">FILL TIMETABLE FOR A WEEK</string>
+    <string name="notes_text">NOTES</string>
+    <string name="create_note">CREATE IMPORTANT NOTES</string>
+    <string name="timetable_descr_text">Until you do this for end, in this window nothing will change</string>
+    <string name="lessons_name_text">Lesson\'s name</string>
+    <string name="choose_date_text">Choose lesson\'s date</string>
+    <string name="choose_time_text">Choose lesson\'s time</string>
+    <string name="insert_teachers_name_text">Insert teacher\'s name</string>
+    <string name="attachments_text">Attachments:</string>
+    <string name="rating_text">Ratings:</string>
+    <string name="homework_text">Input your homework here</string>
+    <string name="create_lesson_text">Create lesson</string>
+    <string name="add_lesson_text">Add lesson</string>
+    <string name="number_lesson_text">Number in day</string>
+    <string name="max_ratings_error">You can not put more than two ratings</string>
+    <string name="time_text">Lesson\'s start time:</string>
+    <string name="date_text">Lesson\'s date:</string>
+    <string name="lesson_add_text">Lesson has been added!</string>
+    <string name="your_timetable">Your timetable at this moment:</string>
+    <!-- Переменные дней недели -->
+    <string name="monday_text">Monday</string>
+    <string name="tuesday_text">Tuesday</string>
+    <string name="wednesday_text">Wednesday</string>
+    <string name="thursday_text">Thursday</string>
+    <string name="friday_text">Friday</string>
+    <string name="saturday_text">Saturday</string>
+</resources>
