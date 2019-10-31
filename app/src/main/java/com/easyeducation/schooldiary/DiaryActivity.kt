@@ -10,12 +10,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -53,8 +54,6 @@ class DiaryActivity : AppCompatActivity() {
     lateinit var readableDB: SQLiteDatabase
     /**Переменная, хранящая writable БД*/
     lateinit var writableDB: SQLiteDatabase
-    /**Helper БД*/
-    private lateinit var helper: SQLiteOpenHelper
     /**2-ой ratingBar*/
     private lateinit var ratingBar2: RatingBar
     //Переменные для метода prepareButtons
@@ -68,11 +67,24 @@ class DiaryActivity : AppCompatActivity() {
     private var lessonDayOfWeek = 2
     /**Переменные для показа DatePickerDialog и TimePickerDialog*/
     private lateinit var calendar: Calendar
+    var dayMonth = 0
+    var dayOfWeek1 = 0
     private var date1 = 15
     private var month1 = 7
     var year2 = 2005
     var hours1 = 12
     var minutes1 = 0
+
+    companion object{
+        /**Helper БД*/
+        @JvmStatic
+        public lateinit var helper: DBHelper
+
+        @JvmStatic
+        fun createHelper(context: Context) {
+            helper = DBHelper(context, "DiaryDB", null, 3)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -85,13 +97,17 @@ class DiaryActivity : AppCompatActivity() {
         createLessonLayout = findViewById(R.id.create_lesson_layout)!!
 
         calendar = Calendar.getInstance()
+        dayMonth = calendar.get(Calendar.DAY_OF_MONTH)
         date1 = calendar.get(Calendar.DATE)
+        calendar.get(Calendar.DAY_OF_MONTH)
         month1 = calendar.get(Calendar.MONTH)
         year2 = calendar.get(Calendar.YEAR)
         hours1 = calendar.get(Calendar.HOUR_OF_DAY)
         minutes1 = calendar.get(Calendar.MINUTE)
 
-        helper = DBHelper(applicationContext, "SQLiteDB", null, 2)
+        //applicationContext.deleteDatabase("DiaryDB")
+
+        createHelper(applicationContext)
         readableDB = helper.readableDatabase
         writableDB = helper.writableDatabase
 
@@ -113,6 +129,7 @@ class DiaryActivity : AppCompatActivity() {
             setVisParams(false, newUserLayout)
             setVisParams(false, createLessonLayout)
             setVisParams(true, oldUserLayout)
+            onOldUser()
         } else {
             //Новый пользователь
             setVisParams(true, newUserLayout)
@@ -123,8 +140,12 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(createLessonLayout.visibility == View.VISIBLE){
-            setVisParams(false, createLessonLayout)
+        if(isOldUser()) {
+            if (createLessonLayout.visibility == View.VISIBLE) {
+                setVisParams(false, createLessonLayout)
+            } else {
+                startActivity(Intent(this, EnterActivity::class.java))
+            }
         }
         else{
             startActivity(Intent(this, EnterActivity::class.java))
@@ -463,12 +484,12 @@ class DiaryActivity : AppCompatActivity() {
                 values.put("ratingTwo", ratingBar2.rating)
                 values.put("homework", homework_edittext.text.toString())
                 //writableDB.insert("LESSONS_CARDS", null, values)
-                /*if(time == "time"){
+                if(time == "time"){
                     time = "12:0"
                 }
                 if(date == "date"){
                     date = "1.0.2019"
-                }*/
+                }
                 /*writableDB.execSQL("INSERT INTO LESSONS_CARDS " +
                                         "VALUES( \"${values.get("order")}\", \"${values.get("name")}\", \"${values.get("color")}\", \"${values.get("date")}\", \"${values.get("dayOfWeek")}\", \"${values.get("time")}\", " +
                                         "\"${values.get("teacher")}\", \"${values.get("ratingOne")}\", \"${values.get("ratingTwo")}\", \"${values.get("homework")}\");")*/
@@ -495,16 +516,17 @@ class DiaryActivity : AppCompatActivity() {
                         "ratingTwo: ${values.get("ratingTwo")}\n" +
                         "homework: ${values.get("homework")}")
 
-                if(!isOldUser()) {
-                    //Новый пользователь
-                    setVisParams(true, newUserLayout)
-                    setVisParams(false, createLessonLayout)
-                    setVisParams(false, oldUserLayout)
-                } else {
+                if(isOldUser()) {
                     //Старый пользователь
                     setVisParams(false, newUserLayout)
                     setVisParams(false, createLessonLayout)
                     setVisParams(true, oldUserLayout)
+                    onOldUser()
+                } else {
+                    //Новый пользователь
+                    setVisParams(true, newUserLayout)
+                    setVisParams(false, createLessonLayout)
+                    setVisParams(false, oldUserLayout)
                 }
 
                 Toast.makeText(applicationContext, resources.getText(R.string.lesson_add_text), Toast.LENGTH_LONG).show()
@@ -623,5 +645,213 @@ class DiaryActivity : AppCompatActivity() {
         }
     }
 
+    /**Метод, вызываемый если проверка "выявила" старого пользователя*/
+    private fun onOldUser() {
+        /**Переменная объекта listview*/
+        val listView = findViewById<ListView>(R.id.list_view)
+        /**Переменная arrayList'а с уроками*/
+        lateinit var lessonsArray: ArrayList<Lesson>
 
+        val cal1 = Calendar.getInstance()
+        cal1.set(year2, month1, dayMonth)
+        dayOfWeek1 = cal1.get(Calendar.DAY_OF_WEEK)
+
+        when(dayOfWeek1){
+            2 -> {
+                lessonsArray = getAndInitData(dayOfWeek1)
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's MONDAY block!")
+            }
+            3 -> {
+                lessonsArray = getAndInitData(dayOfWeek1)
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's TUESDAY block!")
+            }
+            4 -> {
+                lessonsArray = getAndInitData(dayOfWeek1)
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's WEDNESDAY block!")
+            }
+            5 -> {
+                lessonsArray = getAndInitData(dayOfWeek1)
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's THURSDAY block!")
+            }
+            6 -> {
+                lessonsArray = getAndInitData(dayOfWeek1)
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's FRIDAY block!")
+            }
+        }
+
+        listView.adapter = lessonsAdapter(applicationContext, lessonsArray)
+
+    }
+
+    /**Метод получения данных уроков и записи готовых объектов Lesson в ArrayList'ы*/
+    public fun getAndInitData(dayOfWeek: Int) : ArrayList<Lesson> {
+        val readyArrayList = ArrayList<Lesson>()
+
+        when(dayOfWeek){
+            5 -> {
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5", null)
+                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                mondayCurs.moveToFirst()
+                secCursor.moveToFirst()
+                for(i in 0 until mondayCurs.count) {
+                    if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
+                        readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
+                            time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
+                            ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                        mondayCurs.moveToNext()
+                        secCursor.moveToNext()
+                    }
+                    else {
+                       break
+                    }
+                }
+                mondayCurs.close()
+                secCursor.close()
+            }
+            6 -> {
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=6", null)
+                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                mondayCurs.moveToFirst()
+                for(i in 0 until mondayCurs.count) {
+                    if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
+                        readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
+                            time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
+                            ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                        mondayCurs.moveToNext()
+                        secCursor.moveToNext()
+                    }
+                    else {
+                        break
+                    }
+                }
+                mondayCurs.close()
+                secCursor.close()
+            }
+            7 -> {
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=7", null)
+                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                mondayCurs.moveToFirst()
+                for(i in 0 until mondayCurs.count) {
+                    if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
+                        readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
+                            time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
+                            ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                        mondayCurs.moveToNext()
+                        secCursor.moveToNext()
+                    }
+                    else {
+                        break
+                    }
+                }
+                mondayCurs.close()
+                secCursor.close()
+            }
+            1 -> {
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=1", null)
+                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                mondayCurs.moveToFirst()
+                for(i in 0 until mondayCurs.count) {
+                    if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
+                        readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
+                            time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
+                            ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                        mondayCurs.moveToNext()
+                        secCursor.moveToNext()
+                    }
+                    else {
+                        break
+                    }
+                }
+                mondayCurs.close()
+                secCursor.close()
+            }
+            2 -> {
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=2", null)
+                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                mondayCurs.moveToFirst()
+                for(i in 0 until mondayCurs.count) {
+                    if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
+                        readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
+                            time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
+                            ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                        mondayCurs.moveToNext()
+                        secCursor.moveToNext()
+                    }
+                    else {
+                        break
+                    }
+                }
+                mondayCurs.close()
+                secCursor.close()
+            }
+        }
+
+        return readyArrayList
+    }
+
+}
+
+/**Адаптер для listView*/
+class lessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter(){
+
+    private lateinit var context: Context
+    private lateinit var array: ArrayList<Lesson>
+    private lateinit var view: View
+
+    init {
+        context = contextO
+        array = arrayO
+    }
+
+    private class ViewHolder{
+        public lateinit var timeOfLesson: TextView
+        public lateinit var minutesOfLesson: TextView
+        public lateinit var nameOfLesson: TextView
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        lateinit var holder: ViewHolder
+        if(convertView == null){
+            holder = ViewHolder()
+            val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            view = layoutInflater.inflate(R.layout.item_list_pattern, null)
+            holder.nameOfLesson = view.findViewById(R.id.name_of_lesson_textview)
+            holder.minutesOfLesson = view.findViewById(R.id.minutes_of_lesson_textview)
+            holder.timeOfLesson = view.findViewById(R.id.time_of_lesson_textview)
+            view.tag = holder
+            holder.nameOfLesson.text = array[position].name
+            holder.timeOfLesson.text = "${array[position].time}-${array[position].time+45}"
+            holder.minutesOfLesson.text = "45"
+            return view
+        }
+        else{
+            holder = view.tag as ViewHolder
+            holder.nameOfLesson.text = array[position].name
+            holder.timeOfLesson.text = "${array[position].time}-${array[position].time+45}"
+            holder.minutesOfLesson.text = "45"
+            return view
+        }
+    }
+
+    override fun getItem(position: Int): Any {
+        return array[position]
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return array.size
+    }
 }

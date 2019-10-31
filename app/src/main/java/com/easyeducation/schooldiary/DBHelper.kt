@@ -7,12 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper
 class DBHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
 
     override fun onCreate(db: SQLiteDatabase?){
-        onUpgrade(db, 1, 2)
+        onUpgrade(db, 2, 3)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         if(newVersion <= 1){
-            db?.execSQL("CREATE TABLE LESSONS_CARDS (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, color TEXT, date TEXT, dayOfWeek TEXT, time TEXT, lessonsOrder TEXT, teacher TEXT, ratingOne TEXT, ratingTwo TEXT, homework TEXT);")
+            db?.execSQL("CREATE TABLE LESSONS_CARDS (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, color TEXT, date TEXT, dayOfWeek TEXT, time TEXT, teacher TEXT, ratingOne TEXT, ratingTwo TEXT, homework TEXT);")
 
 
             db?.execSQL("CREATE TABLE TEACHERS(" +
