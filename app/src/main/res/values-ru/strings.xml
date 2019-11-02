@@ -21,6 +21,7 @@
     <string name="date_text">Дата урока:</string>
     <string name="lesson_add_text">Урок добавлен!</string>
     <string name="your_timetable">Ваше распиание на данный момент:</string>
+    <string name="minutes_text">минут</string>
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>
     <string name="tuesday_text">Вторник</string>

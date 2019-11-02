@@ -20,6 +20,7 @@
     <string name="date_text">Lesson\'s date:</string>
     <string name="lesson_add_text">Lesson has been added!</string>
     <string name="your_timetable">Your timetable at this moment:</string>
+    <string name="minutes_text">minute</string>
     <!-- Переменные дней недели -->
     <string name="monday_text">Monday</string>
     <string name="tuesday_text">Tuesday</string>

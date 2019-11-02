@@ -82,7 +82,7 @@ class DiaryActivity : AppCompatActivity() {
 
         @JvmStatic
         fun createHelper(context: Context) {
-            helper = DBHelper(context, "DiaryDB", null, 3)
+            helper = DBHelper(context, "DiaryDB", null, 4)
         }
     }
 
@@ -115,6 +115,8 @@ class DiaryActivity : AppCompatActivity() {
         /*writableDB.execSQL("delete from LESSONS_CARDS")
         writableDB.execSQL("delete from TIMETABLE")*/
 
+        //writableDB.delete("LESSONS_CARDS", "_id = ?", arrayOf("18"))
+
         Stetho.initializeWithDefaults(this)
         OkHttpClient.Builder()
             .addNetworkInterceptor(StethoInterceptor())
@@ -140,7 +142,7 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(isOldUser()) {
+        if(!isOldUser()) {
             if (createLessonLayout.visibility == View.VISIBLE) {
                 setVisParams(false, createLessonLayout)
             } else {
@@ -448,9 +450,19 @@ class DiaryActivity : AppCompatActivity() {
                     hours = hourOfDay
                     minutes = minute
                     time = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        "${view.hour}:${view.minute}"
+                        if(hourOfDay.toString().length == 1){
+                            "0${view.hour}:${view.minute}"
+                        }
+                        else {
+                            "${view.hour}:${view.minute}"
+                        }
                     } else {
-                        "$hourOfDay:$minute"
+                        if(hourOfDay.toString().length == 1) {
+                            "0$hourOfDay:$minute"
+                        }
+                        else{
+                            "$hourOfDay:$minute"
+                        }
                     }
                     lesson_time_edittext.text = SpannableStringBuilder("${resources.getText(R.string.time_text)} $time")
                 }
@@ -463,6 +475,17 @@ class DiaryActivity : AppCompatActivity() {
             addLesson.setOnClickListener {
                 val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
+
+                if(time == "time"){
+                    time = "12:0"
+                }
+                if(date == "date"){
+                    date = "1.0.2019"
+                }
+                if(order_lesson_editText.text.toString().isNullOrBlank() || order_lesson_editText.text.toString().isNullOrEmpty()){
+                    order_lesson_editText.setText("1")
+                }
+
                 val values = ContentValues()
                 values.put("name", lesson_name_edittext.text.toString())
                 values.put("color", color)
@@ -483,13 +506,8 @@ class DiaryActivity : AppCompatActivity() {
                 values.put("ratingOne", ratingBar.rating)
                 values.put("ratingTwo", ratingBar2.rating)
                 values.put("homework", homework_edittext.text.toString())
+                values.put("lessonsOrder", order_lesson_editText.text.toString())
                 //writableDB.insert("LESSONS_CARDS", null, values)
-                if(time == "time"){
-                    time = "12:0"
-                }
-                if(date == "date"){
-                    date = "1.0.2019"
-                }
                 /*writableDB.execSQL("INSERT INTO LESSONS_CARDS " +
                                         "VALUES( \"${values.get("order")}\", \"${values.get("name")}\", \"${values.get("color")}\", \"${values.get("date")}\", \"${values.get("dayOfWeek")}\", \"${values.get("time")}\", " +
                                         "\"${values.get("teacher")}\", \"${values.get("ratingOne")}\", \"${values.get("ratingTwo")}\", \"${values.get("homework")}\");")*/
@@ -677,9 +695,13 @@ class DiaryActivity : AppCompatActivity() {
                 lessonsArray = getAndInitData(dayOfWeek1)
                 Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's FRIDAY block!")
             }
+            else -> {
+                lessonsArray = getAndInitData(dayOfWeek1)
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's MONDAY block!")
+            }
         }
 
-        listView.adapter = lessonsAdapter(applicationContext, lessonsArray)
+        listView.adapter = LessonsAdapter(applicationContext, lessonsArray)
 
     }
 
@@ -689,30 +711,25 @@ class DiaryActivity : AppCompatActivity() {
 
         when(dayOfWeek){
             5 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5", null)
-                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
-                secCursor.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
                         readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
                             date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                             time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                             ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
-                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = mondayCurs.getString(mondayCurs.getColumnIndex("lessonsOrder"))))
                         mondayCurs.moveToNext()
-                        secCursor.moveToNext()
                     }
                     else {
                        break
                     }
                 }
                 mondayCurs.close()
-                secCursor.close()
             }
             6 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=6", null)
-                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -720,20 +737,17 @@ class DiaryActivity : AppCompatActivity() {
                             date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                             time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                             ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
-                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = mondayCurs.getString(mondayCurs.getColumnIndex("lessonsOrder"))))
                         mondayCurs.moveToNext()
-                        secCursor.moveToNext()
                     }
                     else {
                         break
                     }
                 }
                 mondayCurs.close()
-                secCursor.close()
             }
             7 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=7", null)
-                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -741,20 +755,17 @@ class DiaryActivity : AppCompatActivity() {
                             date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                             time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                             ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
-                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = mondayCurs.getString(mondayCurs.getColumnIndex("lessonsOrder"))))
                         mondayCurs.moveToNext()
-                        secCursor.moveToNext()
                     }
                     else {
                         break
                     }
                 }
                 mondayCurs.close()
-                secCursor.close()
             }
             1 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=1", null)
-                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -762,20 +773,17 @@ class DiaryActivity : AppCompatActivity() {
                             date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                             time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                             ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
-                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = mondayCurs.getString(mondayCurs.getColumnIndex("lessonsOrder"))))
                         mondayCurs.moveToNext()
-                        secCursor.moveToNext()
                     }
                     else {
                         break
                     }
                 }
                 mondayCurs.close()
-                secCursor.close()
             }
             2 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=2", null)
-                val secCursor = writableDB.rawQuery("SELECT * FROM TIMETABLE", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -783,16 +791,14 @@ class DiaryActivity : AppCompatActivity() {
                             date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                             time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                             ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
-                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = secCursor.getString(secCursor.getColumnIndex("lessonsOrder"))))
+                            homework = mondayCurs.getString(mondayCurs.getColumnIndex("homework")), order = mondayCurs.getString(mondayCurs.getColumnIndex("lessonsOrder"))))
                         mondayCurs.moveToNext()
-                        secCursor.moveToNext()
                     }
                     else {
                         break
                     }
                 }
                 mondayCurs.close()
-                secCursor.close()
             }
         }
 
@@ -802,16 +808,11 @@ class DiaryActivity : AppCompatActivity() {
 }
 
 /**Адаптер для listView*/
-class lessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter(){
+class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter(){
 
-    private lateinit var context: Context
-    private lateinit var array: ArrayList<Lesson>
+    private var context: Context = contextO
+    private var array: ArrayList<Lesson> = arrayO
     private lateinit var view: View
-
-    init {
-        context = contextO
-        array = arrayO
-    }
 
     private class ViewHolder{
         public lateinit var timeOfLesson: TextView
@@ -830,15 +831,96 @@ class lessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter
             holder.timeOfLesson = view.findViewById(R.id.time_of_lesson_textview)
             view.tag = holder
             holder.nameOfLesson.text = array[position].name
-            holder.timeOfLesson.text = "${array[position].time}-${array[position].time+45}"
-            holder.minutesOfLesson.text = "45"
+
+            val secondPart = StringBuilder(array[position].time)
+            if(secondPart.length == 4){
+                secondPart.delete(2, 3)
+            }
+            else{
+                secondPart.delete(1,4)
+            }
+            val firstPart = StringBuilder(array[position].time)
+            firstPart.delete(2, 5)
+            if(secondPart.toString().toInt() + 45 >= 60){
+                if(((secondPart.toString().toInt() + 45) - 60).toString().length == 1){
+                    val stringBuild = StringBuilder(((secondPart.toString().toInt() + 45) - 60).toString())
+                    holder.timeOfLesson.text = "${array[position].time}-${(firstPart.toString().toInt() + 1)}:0$stringBuild"
+                }
+                else {
+                    holder.timeOfLesson.text = "${array[position].time}-${(firstPart.toString().toInt() + 1)}:${((secondPart.toString().toInt() + 45) - 60)}"
+                }
+            }
+            else{
+                holder.timeOfLesson.text = "${array[position].time}-$firstPart:${secondPart.toString().toInt() + 45}"
+            }
+            holder.minutesOfLesson.text = "45 ${context.resources.getString(R.string.minutes_text)}"
             return view
         }
         else{
+            val secondPart = StringBuilder(array[position].time)
+            if(secondPart.length == 4){
+                secondPart.delete(2, 3)
+            }
+            else{
+                secondPart.delete(2,4)
+            }
+            val firstPart = StringBuilder(array[position].time)
+            firstPart.delete(0, 2)
+            if(secondPart.toString().toInt() + 45 >= 60){
+                if(secondPart.toString().toInt() + 45 >= 60){
+                    if(((secondPart.toString().toInt() + 45) - 60).toString().length == 1){
+                        val stringBuild = StringBuilder(((secondPart.toString().toInt() + 45) - 60).toString())
+                        holder.timeOfLesson.text = "${array[position].time}-${(firstPart.toString().toInt() + 1)}:0$stringBuild"
+                    }
+                    else {
+                        holder.timeOfLesson.text = "${array[position].time}-${(firstPart.toString().toInt() + 1)}:${((secondPart.toString().toInt() + 45) - 60)}"
+                    }
+                }
+                else{
+                    holder.timeOfLesson.text = "${array[position].time}-$firstPart:${secondPart.toString().toInt() + 45}"
+                }
+            }
+
             holder = view.tag as ViewHolder
             holder.nameOfLesson.text = array[position].name
-            holder.timeOfLesson.text = "${array[position].time}-${array[position].time+45}"
-            holder.minutesOfLesson.text = "45"
+            holder.timeOfLesson.text = "${array[position].time}-$firstPart:$secondPart"
+
+            //TODO Сделать получение длительности урока из настроек
+            /**Переменная длительности урока*/
+            val minutesOfLesson = 45
+
+            if(Locale.getDefault().language == "ru") {
+                if(minutesOfLesson.toString().length >= 2) {
+                    if (minutesOfLesson % 10 == 1) {
+                        holder.minutesOfLesson.text =
+                            "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}а"
+                    } else if (minutesOfLesson % 10 == 2 || minutesOfLesson % 10 == 3 || minutesOfLesson % 10 == 4) {
+                        holder.minutesOfLesson.text =
+                            "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}ы"
+                    } else {
+                        holder.minutesOfLesson.text =
+                            "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
+                    }
+                }
+                else{
+                    if (minutesOfLesson == 1) {
+                        holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}а"
+                    } else if (minutesOfLesson == 2 || minutesOfLesson == 3 || minutesOfLesson == 4) {
+                        holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}ы"
+                    } else {
+                        holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
+                    }
+                }
+            }
+            else{
+                if(minutesOfLesson > 1) {
+                    holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}s"
+                }
+                else{
+                    holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
+                }
+            }
+
             return view
         }
     }
