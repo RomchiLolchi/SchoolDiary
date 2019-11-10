@@ -11,16 +11,16 @@ class DBHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorF
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if(newVersion <= 1){
+        if(newVersion >= 1){
             db?.execSQL("CREATE TABLE LESSONS_CARDS (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, color TEXT, date TEXT, dayOfWeek TEXT, time TEXT, teacher TEXT, ratingOne TEXT, ratingTwo TEXT, homework TEXT);")
 
 
             db?.execSQL("CREATE TABLE TEACHERS(_id INTEGER PRIMARY KEY AUTOINCREMENT, name INTEGER);")
         }
-        if(newVersion <= 2){
+        if(newVersion >= 2){
             db?.execSQL("CREATE TABLE TIMETABLE (_id INTEGER PRIMARY KEY, name TEXT, lessonsOrder TEXT, dayOfWeek TEXT);")
         }
-        if(newVersion <= 4){
+        if(newVersion >= 4){
             db?.execSQL("ALTER TABLE LESSONS_CARDS ADD lessonsOrder TEXT")
         }
     }

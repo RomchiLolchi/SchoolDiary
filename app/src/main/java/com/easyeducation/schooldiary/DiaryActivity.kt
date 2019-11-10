@@ -23,6 +23,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import kotlinx.android.synthetic.main.fragment_diary.*
@@ -665,8 +667,6 @@ class DiaryActivity : AppCompatActivity() {
 
     /**Метод, вызываемый если проверка "выявила" старого пользователя*/
     private fun onOldUser() {
-        /**Переменная объекта listview*/
-        val listView = findViewById<ListView>(R.id.list_view)
         /**Переменная arrayList'а с уроками*/
         lateinit var lessonsArray: ArrayList<Lesson>
 
@@ -701,8 +701,12 @@ class DiaryActivity : AppCompatActivity() {
             }
         }
 
-        listView.adapter = LessonsAdapter(applicationContext, lessonsArray)
-
+        /**Переменная объекта recyclerView*/
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = LessonsAdapter(applicationContext, lessonsArray)
+        }
     }
 
     /**Метод получения данных уроков и записи готовых объектов Lesson в ArrayList'ы*/
@@ -808,27 +812,34 @@ class DiaryActivity : AppCompatActivity() {
 }
 
 /**Адаптер для listView*/
-class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter(){
+class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerView.Adapter<LessonsAdapter.ViewHolder>(){
 
     private var context: Context = contextO
     private var array: ArrayList<Lesson> = arrayO
     private lateinit var view: View
+    lateinit var backgroundColor: String
+    //TODO Сделать получение длительности урока из настроек
+    /**Переменная длительности урока*/
+    val minutesOfLesson = 43
 
-    private class ViewHolder{
-        public lateinit var timeOfLesson: TextView
-        public lateinit var minutesOfLesson: TextView
-        public lateinit var nameOfLesson: TextView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_layout, parent, false)
+        return ViewHolder(v)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        lateinit var holder: ViewHolder
-        if(convertView == null){
-            holder = ViewHolder()
+    override fun getItemCount(): Int {
+        return array.size
+    }
+
+    @SuppressLint("SetTextI18n", "InflateParams")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if(holder == null){
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = layoutInflater.inflate(R.layout.item_list_pattern, null)
+            view = layoutInflater.inflate(R.layout.card_view_layout, null)
             holder.nameOfLesson = view.findViewById(R.id.name_of_lesson_textview)
             holder.minutesOfLesson = view.findViewById(R.id.minutes_of_lesson_textview)
             holder.timeOfLesson = view.findViewById(R.id.time_of_lesson_textview)
+            val cursor = DiaryActivity.helper.writableDatabase.rawQuery("SELECT color FROM LESSONS_CARDS", null)
             view.tag = holder
             holder.nameOfLesson.text = array[position].name
 
@@ -837,7 +848,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter
                 secondPart.delete(2, 3)
             }
             else{
-                secondPart.delete(1,4)
+                secondPart.delete(1, 4)
             }
             val firstPart = StringBuilder(array[position].time)
             firstPart.delete(2, 5)
@@ -853,19 +864,20 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter
             else{
                 holder.timeOfLesson.text = "${array[position].time}-$firstPart:${secondPart.toString().toInt() + 45}"
             }
-            holder.minutesOfLesson.text = "45 ${context.resources.getString(R.string.minutes_text)}"
-            return view
+            holder.nameOfLesson.text = array[position].name
+            holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
+            cursor.close()
         }
         else{
             val secondPart = StringBuilder(array[position].time)
             if(secondPart.length == 4){
-                secondPart.delete(2, 3)
+                secondPart.delete(0, 3)
             }
             else{
-                secondPart.delete(2,4)
+                secondPart.delete(0, 3)
             }
             val firstPart = StringBuilder(array[position].time)
-            firstPart.delete(0, 2)
+            firstPart.delete(2, 5)
             if(secondPart.toString().toInt() + 45 >= 60){
                 if(secondPart.toString().toInt() + 45 >= 60){
                     if(((secondPart.toString().toInt() + 45) - 60).toString().length == 1){
@@ -880,16 +892,11 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter
                     holder.timeOfLesson.text = "${array[position].time}-$firstPart:${secondPart.toString().toInt() + 45}"
                 }
             }
-
-            holder = view.tag as ViewHolder
             holder.nameOfLesson.text = array[position].name
+            holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
             holder.timeOfLesson.text = "${array[position].time}-$firstPart:$secondPart"
 
-            //TODO Сделать получение длительности урока из настроек
-            /**Переменная длительности урока*/
-            val minutesOfLesson = 45
-
-            if(Locale.getDefault().language == "ru") {
+            if(Locale.getDefault().language == Locale("ru").language) {
                 if(minutesOfLesson.toString().length >= 2) {
                     if (minutesOfLesson % 10 == 1) {
                         holder.minutesOfLesson.text =
@@ -920,20 +927,19 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : BaseAdapter
                     holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
                 }
             }
-
-            return view
         }
     }
 
-    override fun getItem(position: Int): Any {
-        return array[position]
-    }
+    class ViewHolder(view1: View) : RecyclerView.ViewHolder(view1) {
+        public var timeOfLesson: TextView
+        public var minutesOfLesson: TextView
+        public var nameOfLesson: TextView
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
+        init {
+            timeOfLesson = view1.findViewById(R.id.time_of_lesson_textview)
+            minutesOfLesson = view1.findViewById(R.id.minutes_of_lesson_textview)
+            nameOfLesson = view1.findViewById(R.id.name_of_lesson_textview)
+        }
     }
-
-    override fun getCount(): Int {
-        return array.size
-    }
+    //override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 }
