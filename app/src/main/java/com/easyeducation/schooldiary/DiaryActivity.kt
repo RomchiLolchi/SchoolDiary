@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -292,6 +293,8 @@ class DiaryActivity : AppCompatActivity() {
 
             selColor = findViewById(R.id.select_color_image)
             selColor.setOnClickListener {
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
                 if (isOpen) {
                     color_scroll.visibility = View.INVISIBLE
                     color_scroll.isClickable = false
@@ -395,11 +398,15 @@ class DiaryActivity : AppCompatActivity() {
             addAttach.setOnClickListener {
                 //TODO Нужно внедрить "технологию" attachment'ов
                 Toast.makeText(applicationContext, "Скоро будет...", Toast.LENGTH_SHORT).show()
+                /*val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)*/
             }
 
             val deleteAttach = findViewById<ImageView>(R.id.delete_attachment_imageview)
             deleteAttach.setOnClickListener {
                 Toast.makeText(applicationContext, "Скоро будет...", Toast.LENGTH_SHORT).show()
+                /*val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)*/
             }
 
             val addRate = findViewById<ImageView>(R.id.add_rate_imageview)
@@ -415,6 +422,8 @@ class DiaryActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
             }
 
             val deleteRate = findViewById<ImageView>(R.id.delete_rate_imageview)
@@ -425,12 +434,16 @@ class DiaryActivity : AppCompatActivity() {
                     ratingBar2.rating = 0F
                     ratingBarsAmount--
                 }
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
             }
 
             val dateEditText = findViewById<TextView>(R.id.lesson_date_edittext)
             dateEditText.setOnClickListener {
                 /*val imm =  getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY)*/
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
                 val myCallBack = OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                     day = dayOfMonth
                     month = monthOfYear + 1
@@ -448,6 +461,8 @@ class DiaryActivity : AppCompatActivity() {
             timeEditText.setOnClickListener {
                 /*val imm =  getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY)*/
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
                 val myCallBack = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                     hours = hourOfDay
                     minutes = minute
@@ -715,6 +730,7 @@ class DiaryActivity : AppCompatActivity() {
 
         when(dayOfWeek){
             5 -> {
+                Log.d("", "")
                 val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
@@ -733,7 +749,7 @@ class DiaryActivity : AppCompatActivity() {
                 mondayCurs.close()
             }
             6 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=6 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -751,7 +767,7 @@ class DiaryActivity : AppCompatActivity() {
                 mondayCurs.close()
             }
             7 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=7 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -769,7 +785,7 @@ class DiaryActivity : AppCompatActivity() {
                 mondayCurs.close()
             }
             1 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=1 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -787,7 +803,7 @@ class DiaryActivity : AppCompatActivity() {
                 mondayCurs.close()
             }
             2 -> {
-                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
+                val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=2 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
                     if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
@@ -816,14 +832,15 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
 
     private var context: Context = contextO
     private var array: ArrayList<Lesson> = arrayO
-    private lateinit var view: View
+    private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val view = layoutInflater.inflate(R.layout.card_view_layout, null)
     lateinit var backgroundColor: String
     //TODO Сделать получение длительности урока из настроек
     /**Переменная длительности урока*/
     val minutesOfLesson = 43
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_layout, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_view_layout, parent, false)
         return ViewHolder(v)
     }
 
@@ -833,9 +850,8 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
 
     @SuppressLint("SetTextI18n", "InflateParams")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_border))
         if(holder == null){
-            val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = layoutInflater.inflate(R.layout.card_view_layout, null)
             holder.nameOfLesson = view.findViewById(R.id.name_of_lesson_textview)
             holder.minutesOfLesson = view.findViewById(R.id.minutes_of_lesson_textview)
             holder.timeOfLesson = view.findViewById(R.id.time_of_lesson_textview)
@@ -866,6 +882,103 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
             }
             holder.nameOfLesson.text = array[position].name
             holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
+            val cursorColor = DiaryActivity.helper.readableDatabase.rawQuery("SELECT color FROM LESSONS_CARDS WHERE name='${array[position].name}' AND lessonsOrder='${array[position].order}' AND dayOfWeek='${array[position].dayOfWeek}' AND date='${array[position].date}' AND time='${array[position].time}';", null)
+            if(cursorColor.count > 0) {
+                cursorColor.moveToFirst()
+                when (cursorColor.getString(cursorColor.getColumnIndex("color"))) {
+                    "white" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect))
+                        }
+                        view.setBackgroundColor(Color.parseColor("#ffffff"))
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#ffffff"))
+                    }
+                    "red" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.red_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.red_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#f58383"))
+                        view.setBackgroundColor(Color.parseColor("#f58383"))
+                    }
+                    "orange" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.orange_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.orange_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#fec84c"))
+                        view.setBackgroundColor(Color.parseColor("#fec84c"))
+                    }
+                    "yellow" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.yellow_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.yellow_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#fffa6d"))
+                        view.setBackgroundColor(Color.parseColor("#fffa6d"))
+                    }
+                    "green" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.green_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.green_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#b0e67"))
+                        view.setBackgroundColor(Color.parseColor("#b0e67"))
+                    }
+                    "blue" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.blue_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.blue_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#8bdbff"))
+                        view.setBackgroundColor(Color.parseColor("#8bdbff"))
+                    }
+                    "pink" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.pink_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.pink_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#ffb4c0"))
+                        view.setBackgroundColor(Color.parseColor("#ffb4c0"))
+                    }
+                    "violet" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.violet_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.violet_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#c7a4ff"))
+                        view.setBackgroundColor(Color.parseColor("#c7a4ff"))
+                    }
+                }
+            }
+            else{
+                Log.e("DB color error", "Error in first getting if!")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect, null))
+                }
+                else{
+                    holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect))
+                }
+                view.setBackgroundColor(Color.parseColor("#ffffff"))
+            }
+            cursorColor.close()
             cursor.close()
         }
         else{
@@ -895,6 +1008,104 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
             holder.nameOfLesson.text = array[position].name
             holder.minutesOfLesson.text = "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
             holder.timeOfLesson.text = "${array[position].time}-$firstPart:$secondPart"
+
+            val cursorColor = DiaryActivity.helper.readableDatabase.rawQuery("SELECT color FROM LESSONS_CARDS WHERE name='${array[position].name}' AND lessonsOrder='${array[position].order}' AND dayOfWeek='${array[position].dayOfWeek}' AND date='${array[position].date}' AND time='${array[position].time}';", null)
+            if(cursorColor.count > 0) {
+                cursorColor.moveToFirst()
+                when (cursorColor.getString(cursorColor.getColumnIndex("color"))) {
+                    "white" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect))
+                        }
+                        view.setBackgroundColor(Color.parseColor("#ffffff"))
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#ffffff"))
+                    }
+                    "red" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.red_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.red_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#f58383"))
+                        view.setBackgroundColor(Color.parseColor("#f58383"))
+                    }
+                    "orange" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.orange_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.orange_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#fec84c"))
+                        view.setBackgroundColor(Color.parseColor("#fec84c"))
+                    }
+                    "yellow" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.yellow_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.yellow_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#fffa6d"))
+                        view.setBackgroundColor(Color.parseColor("#fffa6d"))
+                    }
+                    "green" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.green_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.green_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#b0e67"))
+                        view.setBackgroundColor(Color.parseColor("#b0e67"))
+                    }
+                    "blue" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.blue_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.blue_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#8bdbff"))
+                        view.setBackgroundColor(Color.parseColor("#8bdbff"))
+                    }
+                    "pink" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.pink_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.pink_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#ffb4c0"))
+                        view.setBackgroundColor(Color.parseColor("#ffb4c0"))
+                    }
+                    "violet" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.violet_rect, null))
+                        }
+                        else{
+                            holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.violet_rect))
+                        }
+                        holder.layoutCardView.setBackgroundColor(Color.parseColor("#c7a4ff"))
+                        view.setBackgroundColor(Color.parseColor("#c7a4ff"))
+                    }
+                }
+            }
+            else{
+                Log.e("DB color error", "Error in first getting if!")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect, null))
+                }
+                else{
+                    holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_rect))
+                }
+                view.setBackgroundColor(Color.parseColor("#ffffff"))
+            }
+            cursorColor.close()
 
             if(Locale.getDefault().language == Locale("ru").language) {
                 if(minutesOfLesson.toString().length >= 2) {
@@ -931,14 +1142,18 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
     }
 
     class ViewHolder(view1: View) : RecyclerView.ViewHolder(view1) {
-        public var timeOfLesson: TextView
-        public var minutesOfLesson: TextView
-        public var nameOfLesson: TextView
+        var timeOfLesson: TextView
+        var minutesOfLesson: TextView
+        var nameOfLesson: TextView
+        var colorCard: ImageView
+        var layoutCardView: ConstraintLayout
 
         init {
             timeOfLesson = view1.findViewById(R.id.time_of_lesson_textview)
             minutesOfLesson = view1.findViewById(R.id.minutes_of_lesson_textview)
             nameOfLesson = view1.findViewById(R.id.name_of_lesson_textview)
+            colorCard = view1.findViewById(R.id.color_card_imageView)
+            layoutCardView = view1.findViewById(R.id.main_layout_of_card_view)
         }
     }
     //override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
