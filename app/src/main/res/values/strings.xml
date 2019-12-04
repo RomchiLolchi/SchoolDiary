@@ -21,6 +21,9 @@
     <string name="lesson_add_text">Lesson has been added!</string>
     <string name="your_timetable">Your timetable at this moment:</string>
     <string name="minutes_text">minute</string>
+    <string name="teacher_text">Teacher</string>
+    <string name="ratings_at_lesson">Lesson grade</string>
+    <string name="your_homework_text">H/w:</string>
     <!-- Переменные дней недели -->
     <string name="monday_text">Monday</string>
     <string name="tuesday_text">Tuesday</string>

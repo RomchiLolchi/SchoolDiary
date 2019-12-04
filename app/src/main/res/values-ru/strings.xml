@@ -10,7 +10,7 @@
     <string name="choose_date_text">Укажите дату урока</string>
     <string name="choose_time_text">Укажите время начала урока</string>
     <string name="insert_teachers_name_text">Введите имя учителя</string>
-    <string name="attachments_text">Вложения:</string>
+    <string name="attachments_text">Вложения</string>
     <string name="rating_text">Оценки:</string>
     <string name="homework_text">Введите домашнее задание</string>
     <string name="create_lesson_text">Создать урок</string>
@@ -22,6 +22,10 @@
     <string name="lesson_add_text">Урок добавлен!</string>
     <string name="your_timetable">Ваше распиание на данный момент:</string>
     <string name="minutes_text">минут</string>
+    <string name="teacher_text">Учитель</string>
+    <string name="ratings_at_lesson">Оценка за урок</string>
+    <string name="your_homework_text">Д/з:</string>
+
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>
     <string name="tuesday_text">Вторник</string>

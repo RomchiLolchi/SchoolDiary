@@ -79,9 +79,14 @@ class DiaryActivity : AppCompatActivity() {
     var minutes1 = 0
 
     companion object{
+
+        /**Объект recyclerView*/
+        @JvmStatic
+        lateinit var recyclerView: RecyclerView
+
         /**Helper БД*/
         @JvmStatic
-        public lateinit var helper: DBHelper
+        lateinit var helper: DBHelper
 
         @JvmStatic
         fun createHelper(context: Context) {
@@ -225,6 +230,7 @@ class DiaryActivity : AppCompatActivity() {
                 ratingBar2.rating = 0F
                 ratingBarsAmount--
             }
+            color_scroll.verticalScrollbarPosition = ScrollView.SCROLLBAR_POSITION_LEFT
             lesson_date_edittext.text = resources.getText(R.string.choose_date_text)
             lesson_time_edittext.text = resources.getText(R.string.choose_time_text)
             order_lesson_editText.text = SpannableStringBuilder("")
@@ -617,7 +623,7 @@ class DiaryActivity : AppCompatActivity() {
     private fun isOldUser() : Boolean {
         var curs = readableDB.rawQuery("SELECT name FROM LESSONS_CARDS", null)
         curs.moveToFirst()
-        if(curs.count > 0 && curs.getString(curs.getColumnIndex("name")) != null && curs.getString(curs.getColumnIndex("name")).isNotEmpty() && curs.getString(curs.getColumnIndex("name")).isNotBlank()){
+        if(curs.count > 0 /*&& curs.getString(curs.getColumnIndex("name")) != null && curs.getString(curs.getColumnIndex("name")).isNotEmpty() && curs.getString(curs.getColumnIndex("name")).isNotBlank()*/){
             Log.d("DB debug", "First line in table: ${curs.getString(curs.getColumnIndex("name"))}")
             curs = readableDB.rawQuery("SELECT name FROM LESSONS_CARDS WHERE dayOfWeek=5", null)
             curs.moveToFirst()
@@ -711,13 +717,11 @@ class DiaryActivity : AppCompatActivity() {
                 Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's FRIDAY block!")
             }
             else -> {
-                lessonsArray = getAndInitData(dayOfWeek1)
-                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's MONDAY block!")
+                Log.d("dayOfWeek check", "Day of week is: $dayOfWeek1 and it's ERROR block!")
             }
         }
-
-        /**Переменная объекта recyclerView*/
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
+        //TODO Настроить программно height карточки и сделать space между ними
+        recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = LessonsAdapter(applicationContext, lessonsArray)
@@ -725,11 +729,11 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     /**Метод получения данных уроков и записи готовых объектов Lesson в ArrayList'ы*/
-    public fun getAndInitData(dayOfWeek: Int) : ArrayList<Lesson> {
+    private fun getAndInitData(dayOfWeek: Int) : ArrayList<Lesson> {
         val readyArrayList = ArrayList<Lesson>()
 
         when(dayOfWeek){
-            5 -> {
+            2 -> {
                 Log.d("", "")
                 val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=5 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
@@ -748,7 +752,7 @@ class DiaryActivity : AppCompatActivity() {
                 }
                 mondayCurs.close()
             }
-            6 -> {
+            3 -> {
                 val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=6 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
@@ -766,7 +770,7 @@ class DiaryActivity : AppCompatActivity() {
                 }
                 mondayCurs.close()
             }
-            7 -> {
+            4 -> {
                 val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=7 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
@@ -784,7 +788,7 @@ class DiaryActivity : AppCompatActivity() {
                 }
                 mondayCurs.close()
             }
-            1 -> {
+            5 -> {
                 val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=1 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
@@ -802,7 +806,7 @@ class DiaryActivity : AppCompatActivity() {
                 }
                 mondayCurs.close()
             }
-            2 -> {
+            6 -> {
                 val mondayCurs = writableDB.rawQuery("SELECT * FROM LESSONS_CARDS WHERE dayOfWeek=2 ORDER BY lessonsOrder ASC;", null)
                 mondayCurs.moveToFirst()
                 for(i in 0 until mondayCurs.count) {
@@ -848,9 +852,18 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
         return array.size
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("SetTextI18n", "InflateParams")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        /**Переменная для корректного открытия и закрытия cardView*/
+        var isOpen = false
+        /**Длинна, добавляющаяся к ConstraintLayout*/
+        val additionHeight = 1050
+        /**Стандартная длина*/
+        val standardHeight = 215
+
         holder.colorCard.setImageDrawable(context.resources.getDrawable(R.drawable.white_border))
+        holder.layoutCardView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, standardHeight)
         if(holder == null){
             holder.nameOfLesson = view.findViewById(R.id.name_of_lesson_textview)
             holder.minutesOfLesson = view.findViewById(R.id.minutes_of_lesson_textview)
@@ -1139,6 +1152,38 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
                 }
             }
         }
+
+        holder.layoutCardView.setOnClickListener {
+            if(isOpen){
+                //Карточка урока открыта (нужно закрыть)
+                isOpen = false
+                holder.layoutCardView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, holder.layoutCardView.height - additionHeight)
+            }
+            else{
+                //Карточка урока закрыта (нужно открыть)
+                isOpen = true
+                holder.layoutCardView.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, holder.layoutCardView.height + additionHeight)
+                holder.teacher.text = array[position].teachers
+                holder.homework.text = "${context.resources.getString(R.string.your_homework_text)} ${array[position].homework}"
+                holder.ratingBarOne.rating = array[position].ratingOne.toFloat()
+                holder.ratingBarTwo.rating = array[position].ratingTwo.toFloat()
+                holder.ratingBarOne.isClickable = false
+                holder.ratingBarTwo.isClickable = false
+                view.invalidate()
+            }
+        }
+
+        val layoutParams = holder.layoutCardView.layoutParams
+        layoutParams.height = layoutParams.height + 20
+        holder.layoutCardView.layoutParams = layoutParams
+
+        //Won't be implemented now
+        /*val layoutParamsForSpace =  ViewGroup.LayoutParams//DiaryActivity.recyclerView.layoutParams
+        layoutParamsForSpace.height = 3
+        val space = Space(context)
+        space.setBackgroundColor(Color.GREEN)
+        space.layoutParams = layoutParamsForSpace
+        DiaryActivity.recyclerView.addView(space)*/
     }
 
     class ViewHolder(view1: View) : RecyclerView.ViewHolder(view1) {
@@ -1147,6 +1192,10 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
         var nameOfLesson: TextView
         var colorCard: ImageView
         var layoutCardView: ConstraintLayout
+        var teacher: TextView
+        var homework: TextView
+        var ratingBarOne: RatingBar
+        var ratingBarTwo: RatingBar
 
         init {
             timeOfLesson = view1.findViewById(R.id.time_of_lesson_textview)
@@ -1154,6 +1203,10 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>) : RecyclerVie
             nameOfLesson = view1.findViewById(R.id.name_of_lesson_textview)
             colorCard = view1.findViewById(R.id.color_card_imageView)
             layoutCardView = view1.findViewById(R.id.main_layout_of_card_view)
+            teacher = view1.findViewById(R.id.teacher_of_lesson_textView)
+            homework = view1.findViewById(R.id.homework_textView)
+            ratingBarOne = view1.findViewById(R.id.ratingBar1)
+            ratingBarTwo = view1.findViewById(R.id.ratingBar2)
         }
     }
     //override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
