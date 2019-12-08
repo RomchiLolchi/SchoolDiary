@@ -24,6 +24,8 @@
     <string name="teacher_text">Teacher</string>
     <string name="ratings_at_lesson">Lesson grade</string>
     <string name="your_homework_text">H/w:</string>
+    <string name="no_lessons_text">No lessons for today!</string>
+
     <!-- Переменные дней недели -->
     <string name="monday_text">Monday</string>
     <string name="tuesday_text">Tuesday</string>
@@ -31,4 +33,10 @@
     <string name="thursday_text">Thursday</string>
     <string name="friday_text">Friday</string>
     <string name="saturday_text">Saturday</string>
+
+    <!-- Переменные для pagerView и tabLayout -->
+    <string name="today_text">Today</string>
+    <string name="tomorrow_text">Tomorrow</string>
+    <string name="week_text">Week</string>
+    <string name="month_text">Month</string>
 </resources>
