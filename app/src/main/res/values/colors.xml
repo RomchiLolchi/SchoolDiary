@@ -15,5 +15,5 @@
     <color name="colorPink">#ffb4e0</color>
     <color name="colorViolet">#c7a4ff</color>
     <!--Цвет для затемнения заднего layout'а-->
-    <color name="colorBackgroundGray">#6F404040</color>
+    <color name="colorBackgroundGray">#91404040</color>
 </resources>
