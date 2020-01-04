@@ -439,16 +439,16 @@ class DiaryActivity : AppCompatActivity() {
             val addAttach = findViewById<ImageView>(R.id.add_attachment_imageview)
             addAttach.setOnClickListener {
                 //TODO Нужно внедрить "технологию" attachment'ов
-                Toast.makeText(applicationContext, "Скоро будет...", Toast.LENGTH_SHORT).show()
-                /*val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)*/
+                Toast.makeText(applicationContext, applicationContext.resources.getString(R.string.will_be_added_soon), Toast.LENGTH_SHORT).show()
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
             }
 
             val deleteAttach = findViewById<ImageView>(R.id.delete_attachment_imageview)
             deleteAttach.setOnClickListener {
-                Toast.makeText(applicationContext, "Скоро будет...", Toast.LENGTH_SHORT).show()
-                /*val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)*/
+                Toast.makeText(applicationContext, applicationContext.resources.getString(R.string.will_be_added_soon), Toast.LENGTH_SHORT).show()
+                val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
             }
 
             val addRate = findViewById<ImageView>(R.id.add_rate_imageview)

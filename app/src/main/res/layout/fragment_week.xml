@@ -14,9 +14,9 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="156dp"
+            android:layout_marginStart="140dp"
             android:layout_marginTop="356dp"
-            android:text="Скоро будет..."
+            android:text="@string/will_be_added_soon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

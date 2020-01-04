@@ -26,6 +26,7 @@
     <string name="your_homework_text">H/w:</string>
     <string name="no_lessons_text">No lessons for today!</string>
     <string name="update_lesson_text">Update lesson</string>
+    <string name="will_be_added_soon">Will be added soon…</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Monday</string>

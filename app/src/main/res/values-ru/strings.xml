@@ -27,6 +27,7 @@
     <string name="your_homework_text">Д/з:</string>
     <string name="no_lessons_text">На сегодня нет уроков!</string>
     <string name="update_lesson_text">Обновить урок</string>
+    <string name="will_be_added_soon">Скоро будет…</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>

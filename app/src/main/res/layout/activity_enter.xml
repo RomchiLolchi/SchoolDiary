@@ -49,7 +49,6 @@
             android:layout_width="98dp"
             android:layout_height="38dp"
             android:layout_marginStart="156dp"
-            android:layout_marginLeft="156dp"
             android:layout_marginBottom="116dp"
             android:contentDescription="@string/diary_text"
             app:layout_constraintBottom_toBottomOf="parent"
