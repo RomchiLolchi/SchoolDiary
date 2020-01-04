@@ -164,6 +164,13 @@ class DiaryActivity : AppCompatActivity() {
 
         prepareButtons(false)
 
+        val addLessonOldUser = findViewById<Button>(R.id.add_lesson_olduser_button)
+        addLessonOldUser.setOnClickListener{
+            setVisParams(true, createLessonLayout)
+            main_layout.isClickable = false
+            prepareButtons(needToClear = true)
+        }
+
         if(isOldUser()) {
             //Старый пользователь
             setVisParams(false, newUserLayout)
@@ -179,7 +186,7 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(!isOldUser()) {
+        if(isOldUser()) {
             if (createLessonLayout.visibility == View.VISIBLE) {
                 setVisParams(false, createLessonLayout)
             } else {
