@@ -1,7 +1,7 @@
 package com.easyeducation.schooldiary
 
 /**Класс для удобного заполнения данными recycler view в layout'е старого пользователя*/
-data class Lesson(val name: String, val color: String, val date: String, val dayOfWeek: String, val time: String, val teachers: String, val ratingOne: String, val ratingTwo: String, val homework: String, val order: String) {
+data class Lesson(var name: String, var color: String, var date: String, var dayOfWeek: String, var time: String, var teachers: String, var ratingOne: String, var ratingTwo: String, var homework: String, var order: String) {
 
     init {
         lessonInit(name, color, date, dayOfWeek, time, teachers, ratingOne, ratingTwo, homework, order)

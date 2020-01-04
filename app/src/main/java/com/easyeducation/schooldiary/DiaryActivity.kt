@@ -28,7 +28,8 @@ import androidx.viewpager.widget.ViewPager
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_diary.*
+import kotlinx.android.synthetic.main.activity_diary.*
+import kotlinx.android.synthetic.main.activity_diary.view.*
 import okhttp3.OkHttpClient
 import java.util.*
 import kotlin.collections.ArrayList
@@ -39,38 +40,25 @@ import kotlin.collections.ArrayList
  */
 class DiaryActivity : AppCompatActivity() {
 
-    /**Переменная layout'а создания урока*/
-    lateinit var createLessonLayout: ConstraintLayout
     /**Переменная layout'а нового пользователя*/
     lateinit var newUserLayout: ConstraintLayout
     /**Переменная layout'а старого пользователя*/
     lateinit var oldUserLayout: ConstraintLayout
     /**Переменная, хранящая значение количества ratingBar'ов*/
     var ratingBarsAmount = 1
-    /**Переменная, хранящая цвет карточек*/
-    var color = "white"
-    /**Переменная, хранящая значение даты для карточки*/
-    var date = "date"
-    /**Переменная, хранящая значение времени для карточки*/
-    var time = "time"
     /**2-ой ratingBar*/
     private lateinit var ratingBar2: RatingBar
     //Переменные для метода prepareButtons
     private lateinit var selColor: ImageView
-    /**Переменные даты и времени*/
-    private var day = 0
-    private var month = 0
-    private var year1 = 0
-    private var minutes = 0
-    private var hours = 0
-    private var lessonDayOfWeek = 2
-    /**Переменные для показа DatePickerDialog и TimePickerDialog*/
-    var hours1 = 12
-    var minutes1 = 0
     private lateinit var calendar: Calendar
-    private var date1 = 15
 
     companion object{
+
+        /**Переменная layout'а создания урока*/
+        @JvmStatic
+        lateinit var createLessonLayout: ConstraintLayout
+
+        lateinit var addLesson: Button
 
         /**Переменные времени*/
         @JvmStatic
@@ -81,6 +69,36 @@ class DiaryActivity : AppCompatActivity() {
         var month1 = 7
         @JvmStatic
         var dayOfWeek1 = 0
+
+        /**Переменная, хранящая значение даты для карточки*/
+        @JvmStatic
+        var date = "date"
+        /**Переменная, хранящая значение времени для карточки*/
+        @JvmStatic
+        var time = "time"
+
+        /**Переменная, хранящая цвет карточек*/
+        @JvmStatic
+        var color = "white"
+
+        /**Переменные даты и времени*/
+        @JvmStatic
+        var day = 0
+        @JvmStatic
+        var month = 0
+        @JvmStatic
+        var year1 = 0
+        @JvmStatic
+        var minutes = 0
+        @JvmStatic
+        var hours = 0
+        @JvmStatic
+        var lessonDayOfWeek = 2
+
+        /**Переменные для показа DatePickerDialog и TimePickerDialog*/
+        var hours1 = 12
+        var minutes1 = 0
+        var date1 = 15
 
         /**Helper БД*/
         @JvmStatic
@@ -96,11 +114,17 @@ class DiaryActivity : AppCompatActivity() {
         fun createHelper(context: Context) {
             helper = DBHelper(context, "DiaryDB", null, 4)
         }
-    }
+
+        @JvmStatic
+        fun returnMainLayout() : ConstraintLayout {
+            return createLessonLayout
+        }
+
+        }
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_diary)
+        setContentView(R.layout.activity_diary)
         supportActionBar?.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         /**Переменная view для вызова findViewById()*/
@@ -134,9 +158,11 @@ class DiaryActivity : AppCompatActivity() {
             .addNetworkInterceptor(StethoInterceptor())
             .build()
 
-        ratingBar2 = findViewById(R.id.ratingBar2)
+        ratingBar2 = findViewById(R.id.ratingBarTwo)
         ratingBar2.isClickable = false
         ratingBar2.visibility = View.INVISIBLE
+
+        prepareButtons(false)
 
         if(isOldUser()) {
             //Старый пользователь
@@ -150,7 +176,6 @@ class DiaryActivity : AppCompatActivity() {
             setVisParams(false, createLessonLayout)
             setVisParams(false, oldUserLayout)
         }
-        prepareButtons(false)
     }
 
     override fun onBackPressed() {
@@ -248,7 +273,7 @@ class DiaryActivity : AppCompatActivity() {
             newLesson.setOnClickListener {
                 setVisParams(true, createLessonLayout)
                 main_layout.isClickable = false
-                prepareButtons(true)
+                prepareButtons(needToClear = true)
             }
 
             lesson_name_edittext.setOnEditorActionListener { v, actionId, event ->
@@ -498,7 +523,8 @@ class DiaryActivity : AppCompatActivity() {
                 }
             }
 
-            val addLesson = findViewById<Button>(R.id.add_lesson_button)
+            addLesson = findViewById(R.id.add_lesson_button)
+            addLesson.text = applicationContext.resources.getString(R.string.add_lesson_text)
             addLesson.setOnClickListener {
                 val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
@@ -612,7 +638,7 @@ class DiaryActivity : AppCompatActivity() {
                 }
                 cursor.close()
                 setVisParams(false, createLessonLayout)
-                prepareButtons(true)
+                prepareButtons(needToClear = true)
                 //TODO Сделать так, чтобы при не вводе данных урок не добавлялся
                 //TODO Закрыть БД после использования
             }
@@ -692,9 +718,21 @@ class DiaryActivity : AppCompatActivity() {
 
     /**Метод, вызываемый если проверка "выявила" старого пользователя*/
     private fun onOldUser() {
+        val arrayList = ArrayList<View>()
+        arrayList.add(findViewById(R.id.add_lesson_olduser_button)) //0
+        arrayList.add(findViewById(R.id.lesson_time_edittext)) //1
+        arrayList.add(findViewById(R.id.lesson_date_edittext)) //2
+        arrayList.add(findViewById(R.id.order_lesson_editText)) //3
+        arrayList.add(findViewById(R.id.lesson_name_edittext)) //4
+        arrayList.add(findViewById(R.id.lesson_teacher_edittext)) //5
+        arrayList.add(findViewById(R.id.ratingBar)) //6
+        arrayList.add(findViewById(R.id.ratingBarTwo)) //7
+        arrayList.add(findViewById(R.id.homework_edittext)) //8
+        arrayList.add(findViewById(R.id.select_color_image)) //9
+
         /**Объект pagerView*/
         val pagerView = findViewById<ViewPager>(R.id.viewPager)
-        pagerView.adapter = PagerAdapter(applicationContext, supportFragmentManager)
+        pagerView.adapter = PagerAdapter(applicationContext, supportFragmentManager, arrayList)
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
         tabLayout.setupWithViewPager(pagerView)
         tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
@@ -702,13 +740,14 @@ class DiaryActivity : AppCompatActivity() {
 }
 
 /**Адаптер для pagerView*/
-class PagerAdapter (contextOb: Context, fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class PagerAdapter (contextOb: Context, fm: FragmentManager, objects: ArrayList<View>) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val myCon = contextOb
+    private val obj = objects
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> TodayFragment(myCon, "today")
-            1 -> TodayFragment(myCon, "tomorrow")
+            0 -> TodayFragment(myCon, "today", obj)
+            1 -> TodayFragment(myCon, "tomorrow", obj)
             2 -> WeekFragment()
             3 -> MonthFragment()
             else -> throw RuntimeException("Error in creating fragments!")

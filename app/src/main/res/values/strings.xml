@@ -25,6 +25,7 @@
     <string name="ratings_at_lesson">Lesson grade</string>
     <string name="your_homework_text">H/w:</string>
     <string name="no_lessons_text">No lessons for today!</string>
+    <string name="update_lesson_text">Update lesson</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Monday</string>

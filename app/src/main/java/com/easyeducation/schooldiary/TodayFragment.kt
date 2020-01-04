@@ -1,32 +1,41 @@
 package com.easyeducation.schooldiary
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.easyeducation.schooldiary.DiaryActivity.Companion.addLesson
+import com.easyeducation.schooldiary.DiaryActivity.Companion.date
 import com.easyeducation.schooldiary.DiaryActivity.Companion.dayMonth
 import com.easyeducation.schooldiary.DiaryActivity.Companion.dayOfWeek1
 import com.easyeducation.schooldiary.DiaryActivity.Companion.month1
+import com.easyeducation.schooldiary.DiaryActivity.Companion.time
 import com.easyeducation.schooldiary.DiaryActivity.Companion.writableDB
 import com.easyeducation.schooldiary.DiaryActivity.Companion.year2
+import kotlinx.android.synthetic.main.activity_diary.view.*
 import kotlinx.android.synthetic.main.card_view_layout.view.*
 import java.text.DateFormatSymbols
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class TodayFragment(contextGet: Context, mode: String) : Fragment() {
+class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>) : Fragment() {
 
     companion object{
         /**Метод получения данных уроков и записи готовых объектов Lesson в ArrayList'ы*/
@@ -139,6 +148,7 @@ class TodayFragment(contextGet: Context, mode: String) : Fragment() {
     private val myMode = mode
     /**Переменная контекста*/
     private val context1: Context = contextGet
+    val array = objects
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -148,6 +158,10 @@ class TodayFragment(contextGet: Context, mode: String) : Fragment() {
         val view = inflater.inflate(R.layout.fragment_today, container, false)
 
         recyclerView = view?.findViewById(R.id.recycler_view)!!
+
+        val mainLayout = view.findViewById<ConstraintLayout>(R.id.today_main_layout)
+        mainLayout.visibility = View.VISIBLE
+        mainLayout.isClickable = true
 
         val dayTextView = view.findViewById<TextView>(R.id.day_textView)
 
@@ -209,7 +223,7 @@ class TodayFragment(contextGet: Context, mode: String) : Fragment() {
             }
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = LinearLayoutManager(context1)
-            recyclerView.adapter = LessonsAdapter(context1, lessonsArray, myMode)
+            recyclerView.adapter = LessonsAdapter(context1, lessonsArray, myMode, array)
         }
         else{
             if(myMode != "tomorrow") {
@@ -225,11 +239,13 @@ class TodayFragment(contextGet: Context, mode: String) : Fragment() {
 }
 
 /**Адаптер для recyclerView*/
-class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: String) : RecyclerView.Adapter<LessonsAdapter.ViewHolder>() {
+class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: String, objects: ArrayList<View>) : RecyclerView.Adapter<LessonsAdapter.ViewHolder>() {
 
     private var mode = modeVar
     private var context: Context = contextO
+    private val contextVar = contextO
     public var array: ArrayList<Lesson> = arrayO
+    var objects = objects
     private val layoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val view = layoutInflater.inflate(R.layout.card_view_layout, null)
@@ -620,7 +636,240 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
             }
 
         holder.editCard.setOnClickListener {
+            val layout = DiaryActivity.createLessonLayout
 
+            layout.visibility = View.VISIBLE
+            layout.isClickable = true
+
+            DiaryActivity.color = findColor(holder.layoutCardView)
+
+            (objects[1] as TextView).text = "${context.resources.getString(R.string.time_text)} ${array[position].time}"
+            (objects[2] as TextView).text = "${context.resources.getString(R.string.date_text)} ${array[position].date}"
+            (objects[3] as EditText).text = SpannableStringBuilder(array[position].order)
+            (objects[4] as EditText).text = SpannableStringBuilder(array[position].name)
+            (objects[5] as EditText).text = SpannableStringBuilder(array[position].teachers)
+            (objects[6] as RatingBar).rating = array[position].ratingOne.toFloat()
+            (objects[7] as RatingBar).rating = array[position].ratingTwo.toFloat()
+            (objects[8] as EditText).text = SpannableStringBuilder(array[position].homework)
+            when(DiaryActivity.color) {
+                "white" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.white_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.white_border)
+                    DiaryActivity.color = "white"
+                }
+                "red" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.red_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.red_border)
+                    DiaryActivity.color = "red"
+                }
+                "orange" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.orange_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.orange_border)
+                    DiaryActivity.color = "orange"
+                }
+                "yellow" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.yellow_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.yellow_border)
+                    DiaryActivity.color = "yellow"
+                }
+                "green" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.green_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.green_border)
+                    DiaryActivity.color = "green"
+                }
+                "blue" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.blue_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.blue_border)
+                    DiaryActivity.color = "blue"
+                }
+                "pink" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.pink_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.pink_border)
+                    DiaryActivity.color = "pink"
+                }
+                "violet" -> {
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.violet_rect))
+                    layout.background = contextVar.resources.getDrawable(R.drawable.violet_border)
+                    DiaryActivity.color = "violet"
+                }
+            }
+
+            addLesson.apply {
+                text = contextVar.resources.getString(R.string.update_lesson_text)
+                setOnClickListener {
+                    holder.layoutCardView.isClickable = false
+                    holder.informationLayout.isClickable = false
+                    holder.blackoutLayout.isClickable = false
+                    objects[0].isClickable = false //Кнопка создания урока
+
+                    val inputManager = contextVar.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+
+                    if(time == "time"){
+                        time = "12:0"
+                    }
+                    if(date == "date"){
+                        date = "1.0.2019"
+                    }
+                    if((objects[3] as EditText).text.toString().isNullOrBlank() || (objects[3] as EditText).text.toString().isNullOrEmpty()){ //order_lesson_editText
+                        (objects[3] as EditText).text = SpannableStringBuilder("1")
+                    }
+
+                    val values = ContentValues()
+                    values.put("name", (objects[4] as TextView).text.toString())
+                    values.put("color", DiaryActivity.color)
+                    values.put("date", date)
+                    val cal = Calendar.getInstance()
+                    cal.firstDayOfWeek = Calendar.MONDAY
+                    cal.minimalDaysInFirstWeek = 4
+                    cal.set(Calendar.YEAR, DiaryActivity.year1)
+                    cal.set(Calendar.MONTH, DiaryActivity.month)
+                    cal.set(Calendar.DAY_OF_MONTH, DiaryActivity.day)
+                    cal.set(Calendar.MINUTE, DiaryActivity.minutes)
+                    cal.set(Calendar.HOUR_OF_DAY, DiaryActivity.hours)
+                    val lessonDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+                    //Toast.makeText(applicationContext, lessonDayOfWeek, Toast.LENGTH_SHORT).show()
+                    values.put("dayOfWeek", lessonDayOfWeek)
+                    values.put("time", time)
+                    values.put("teacher", (objects[5] as TextView).text.toString())
+                    values.put("ratingOne", (objects[6] as RatingBar).rating)
+                    values.put("ratingTwo", (objects[7] as RatingBar).rating)
+                    values.put("homework", (objects[8] as EditText).text.toString())
+                    values.put("lessonsOrder",(objects[3] as EditText).text.toString())
+                    writableDB.execSQL(
+                        "UPDATE LESSONS_CARDS SET name = '${values.get("name")}', color = '${values.get(
+                            "color"
+                        )}', date = '${values.get("date")}', dayOfWeek = '${values.get("dayOfWeek")}', time = '${values.get(
+                            "time"
+                        )}', teacher = '${values.get("teacher")}', ratingOne = '${values.get("ratingOne")}', ratingTwo = '${values.get(
+                            "ratingTwo"
+                        )}', homework = '${values.get("homework")}' WHERE name='${array[position].name}' AND color='${array[position].color}' " +
+                                "AND homework='${array[position].homework}' AND teacher='${array[position].teachers}' AND ratingOne='${array[position].ratingOne}'" +
+                                " AND ratingTwo='${array[position].ratingTwo}' AND time='${array[position].time}'"
+                    )
+
+                    holder.nameOfLesson.text = values.getAsString("name")
+                    val second = StringBuilder(array[position].time)
+                    second.delete(0, 3)
+                    if (second.length == 1) {
+                        second.insert(0, "0")
+                        if (second.toString().toInt() > 60) {
+                            second.delete(0, 1)
+                            second.append("0")
+                        }
+                    }
+                    val first = StringBuilder(array[position].time)
+                    first.delete(2, 5)
+                    if (second.toString().toInt() + 45 >= 60) {
+                        if (((second.toString().toInt() + 45) - 60).toString().length == 1) {
+                            val stringBuild =
+                                StringBuilder(((second.toString().toInt() + 45) - 60).toString())
+                            holder.timeOfLesson.text =
+                                "$first:$second-${(first.toString().toInt() + 1)}:0$stringBuild"
+                        } else {
+                            holder.timeOfLesson.text =
+                                "$first:$second-${(first.toString().toInt() + 1)}:${((second.toString().toInt() + 45) - 60)}"
+                        }
+                    } else {
+                        holder.timeOfLesson.text =
+                            "$first:$second-$first:${second.toString().toInt() + 45}"
+                    }
+                    holder.teacher.text = values.getAsString("teacher")
+                    holder.ratingBarOne.rating = values.getAsFloat("ratingOne")
+                    holder.ratingBarTwo.rating = values.getAsFloat("ratingTwo")
+                    holder.homework.text = "H/w: ${values.get("homework")}"
+
+
+                    array[position].name = values.getAsString("name")
+                    array[position].color = DiaryActivity.color
+                    array[position].teachers = values.getAsString("teacher")
+                    array[position].ratingOne = values.getAsString("ratingOne")
+                    array[position].ratingTwo = values.getAsString("ratingTwo")
+                    array[position].homework = values.getAsString("homework")
+                    array[position].order = (objects[3] as EditText).text.toString()
+                    array[position].date = date
+                    array[position].time = time
+                    array[position].dayOfWeek = lessonDayOfWeek.toString()
+
+
+                    val cal1 = Calendar.getInstance()
+                    cal1.set(year2, month1, dayMonth)
+                    if(mode == "tomorrow"){
+                        cal1.add(Calendar.DAY_OF_MONTH, 1)
+                    }
+                    val dayOfWeekLocalVar = cal1.get(Calendar.DAY_OF_WEEK)
+
+                    layout.visibility = View.INVISIBLE
+                    layout.isClickable = false
+
+                    layout.background = contextVar.resources.getDrawable(R.drawable.white_border)
+                    (objects[1] as TextView).text = contextVar.resources.getString(R.string.choose_time_text)
+                    (objects[2] as TextView).text = contextVar.resources.getString(R.string.choose_date_text)
+                    (objects[3] as EditText).text = SpannableStringBuilder("")
+                    (objects[9] as ImageView).setImageDrawable(contextVar.resources.getDrawable(R.drawable.white_rect))
+                    (objects[6] as RatingBar).rating = 0.0F
+                    (objects[7] as RatingBar).rating = 0.0F
+                    (objects[4] as EditText).text = SpannableStringBuilder("")
+                    (objects[5] as EditText).text = SpannableStringBuilder("")
+                    (objects[8] as EditText).text = SpannableStringBuilder("")
+
+                    when(DiaryActivity.color){
+                        "white" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorWhite))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorWhite))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.white_rect))
+                        }
+                        "red" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorRed))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorRed))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.red_rect))
+                        }
+                        "orange" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorOrange))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorOrange))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.orange_rect))
+                        }
+                        "yellow" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorYellow))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorYellow))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.yellow_rect))
+                        }
+                        "green" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorGreen))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorGreen))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.green_rect))
+                        }
+                        "blue" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorBlue))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorBlue))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.blue_rect))
+                        }
+                        "pink" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorPink))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorPink))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.pink_rect))
+                        }
+                        "violet" -> {
+                            holder.layoutCardView.setBackgroundColor(contextVar.resources.getColor(R.color.colorViolet))
+                            holder.informationLayout.setBackgroundColor(contextVar.resources.getColor(R.color.colorViolet))
+                            holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.violet_rect))
+                        }
+                    }
+
+                    holder.layoutCardView.isClickable = true
+                    holder.informationLayout.isClickable = true
+                    holder.blackoutLayout.visibility = View.INVISIBLE
+                    holder.blackoutLayout.isClickable = false
+                    objects[0].isClickable = true //Кнопка создания урока
+
+                    holder.teacher.postInvalidate()
+                    holder.ratingBarOne.postInvalidate()
+                    holder.ratingBarTwo.postInvalidate()
+                    holder.homework.postInvalidate()
+                    holder.layoutCardView.postInvalidate()
+                    holder.informationLayout.postInvalidate()
+                }
+            }
         }
 
         holder.deleteCard.setOnClickListener {
@@ -633,12 +882,15 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                 cal1.add(Calendar.DAY_OF_MONTH, 1)
             }
             val dayOfWeekLocalVar = cal1.get(Calendar.DAY_OF_WEEK)
-            TodayFragment.recyclerView.adapter = LessonsAdapter(context, TodayFragment.getAndInitData(dayOfWeekLocalVar), mode)
+            TodayFragment.recyclerView.adapter = LessonsAdapter(context, TodayFragment.getAndInitData(dayOfWeekLocalVar), mode, objects)
+            TodayFragment.recyclerView.invalidate()
+            holder.layoutCardView.invalidate()
+            if(holder.informationLayout.visibility == View.VISIBLE){
+                holder.informationLayout.invalidate()
+            }
+            holder.blackoutLayout.visibility = View.INVISIBLE
+            holder.blackoutLayout.isClickable = false
         }
-
-        /*val layoutParams = holder.layoutCardView.layoutParams
-        layoutParams.height = layoutParams.height + 20
-        holder.layoutCardView.layoutParams = layoutParams*/
 
         //Won't be implemented now
         /*val layoutParamsForSpace =  ViewGroup.LayoutParams//DiaryActivity.recyclerView.layoutParams
@@ -685,12 +937,13 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
             }
         }
 
-    private fun findColor(colorRes: ConstraintLayout) : String{
+    @SuppressLint("NewApi")
+    private fun findColor(colorRes: ConstraintLayout) : String {
         lateinit var color: String
 
         val colorBackgr: ColorDrawable = colorRes.background as ColorDrawable
 
-        when(colorBackgr.color){
+        when (colorBackgr.color) {
             Color.parseColor("#ffffff") -> {
                 color = "white"
             }

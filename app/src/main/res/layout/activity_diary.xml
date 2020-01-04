@@ -15,13 +15,14 @@
             android:id="@+id/old_user_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/add_lesson_olduser_button"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -30,6 +31,7 @@
                 android:text="@string/add_lesson_text"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -38,13 +40,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:background="@color/lessons_cards_gray"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/add_lesson_olduser_button"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 app:tabIndicatorColor="@color/colorOrange"
                 tools:ignore="MissingConstraints" />
 
@@ -54,6 +58,7 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="3dp"
                 android:background="@android:color/transparent"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@id/divider2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -125,14 +130,12 @@
             android:layout_width="385dp"
             android:layout_height="656dp"
             android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
             android:layout_marginTop="102dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
             android:layout_marginBottom="102dp"
             android:background="@drawable/white_border"
             android:clickable="false"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/old_user_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -355,9 +358,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/add_image"
                 app:layout_constraintStart_toEndOf="@+id/attachments_textview"
-                app:layout_constraintTop_toBottomOf="@+id/lesson_teacher_edittext" />
+                app:layout_constraintTop_toBottomOf="@+id/lesson_teacher_edittext"
+                app:srcCompat="@drawable/add_image" />
 
             <ImageView
                 android:id="@+id/delete_attachment_imageview"
@@ -366,9 +369,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/delete_image"
                 app:layout_constraintStart_toEndOf="@+id/add_attachment_imageview"
-                app:layout_constraintTop_toBottomOf="@+id/lesson_teacher_edittext" />
+                app:layout_constraintTop_toBottomOf="@+id/lesson_teacher_edittext"
+                app:srcCompat="@drawable/delete_image" />
 
             <HorizontalScrollView
                 android:id="@+id/attachments_scroll"
@@ -411,7 +414,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/rating_textview" />
 
             <RatingBar
-                android:id="@+id/ratingBar2"
+                android:id="@+id/ratingBarTwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -427,9 +430,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/add_image"
                 app:layout_constraintStart_toEndOf="@+id/rating_textview"
-                app:layout_constraintTop_toBottomOf="@+id/attachments_scroll" />
+                app:layout_constraintTop_toBottomOf="@+id/attachments_scroll"
+                app:srcCompat="@drawable/add_image" />
 
             <ImageView
                 android:id="@+id/delete_rate_imageview"
@@ -438,23 +441,23 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/delete_image"
                 app:layout_constraintStart_toEndOf="@+id/add_rate_imageview"
-                app:layout_constraintTop_toBottomOf="@+id/attachments_scroll" />
+                app:layout_constraintTop_toBottomOf="@+id/attachments_scroll"
+                app:srcCompat="@drawable/delete_image" />
 
             <EditText
                 android:id="@+id/homework_edittext"
                 android:layout_width="357dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginBottom="16dp"
                 android:ems="10"
                 android:hint="@string/homework_text"
-                android:inputType="textPersonName"
+                android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

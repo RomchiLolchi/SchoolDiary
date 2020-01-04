@@ -26,6 +26,7 @@
     <string name="ratings_at_lesson">Оценка за урок</string>
     <string name="your_homework_text">Д/з:</string>
     <string name="no_lessons_text">На сегодня нет уроков!</string>
+    <string name="update_lesson_text">Обновить урок</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>
