@@ -225,15 +225,15 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
             recyclerView.layoutManager = LinearLayoutManager(context1)
             recyclerView.adapter = LessonsAdapter(context1, lessonsArray, myMode, array)
         }
-        else{
-            if(myMode != "tomorrow") {
+        /*else{
+            if(myMode == "today") {
                 Toast.makeText(
                     context1,
                     context1.resources.getString(R.string.no_lessons_text),
                     Toast.LENGTH_LONG
                 ).show()
             }
-        }
+        }*/
         return view
     }
 }
@@ -292,6 +292,11 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         view.invalidate()
+
+        if(array[position] == array.last()){
+            holder.space.visibility = View.GONE
+            holder.space.isClickable = false
+        }
 
         val secondPart = StringBuilder(array[position].time)
         secondPart.delete(0, 3)
@@ -919,6 +924,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
             var blackoutLayout: ConstraintLayout
             /**Переменная для корректного открытия и закрытия cardView*/
             var isOpen = false
+            var space: Space
 
             init {
                 timeOfLesson = view1.findViewById(R.id.time_of_lesson_textview)
@@ -934,6 +940,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                 blackoutLayout = view1.findViewById(R.id.blackout_layout)
                 editCard = view1.findViewById(R.id.edit_card_imageView)
                 deleteCard = view1.findViewById(R.id.delete_card_imageView)
+                space = view1.findViewById(R.id.space)
             }
         }
 

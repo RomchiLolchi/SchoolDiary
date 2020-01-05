@@ -21,13 +21,14 @@
             android:layout_width="332dp"
             android:layout_height="38dp"
             android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
             android:layout_marginTop="112dp"
+            android:layout_marginEnd="43dp"
             android:gravity="center"
             android:text="@string/diary_text"
             android:textColor="@android:color/background_light"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,11 +37,12 @@
             android:layout_width="332dp"
             android:layout_height="20dp"
             android:layout_marginStart="41dp"
-            android:layout_marginLeft="41dp"
+            android:layout_marginEnd="42dp"
             android:gravity="center"
             android:text="@string/fill_timetable"
             android:textAllCaps="false"
             android:textColor="@android:color/background_light"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/diary_textview" />
 
@@ -49,9 +51,11 @@
             android:layout_width="98dp"
             android:layout_height="38dp"
             android:layout_marginStart="156dp"
+            android:layout_marginEnd="161dp"
             android:layout_marginBottom="116dp"
             android:contentDescription="@string/diary_text"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/diary_open_button" />
 
@@ -72,13 +76,14 @@
             android:layout_width="218dp"
             android:layout_height="36dp"
             android:layout_marginStart="104dp"
-            android:layout_marginLeft="104dp"
             android:layout_marginTop="112dp"
+            android:layout_marginEnd="93dp"
             android:gravity="center"
             android:text="@string/notes_text"
             android:textColor="@android:color/background_light"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,10 +92,11 @@
             android:layout_width="218dp"
             android:layout_height="21dp"
             android:layout_marginStart="104dp"
-            android:layout_marginLeft="104dp"
+            android:layout_marginEnd="93dp"
             android:gravity="center"
             android:text="@string/create_note"
             android:textColor="@android:color/background_light"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notes_textview" />
 
@@ -99,10 +105,11 @@
             android:layout_width="98dp"
             android:layout_height="38dp"
             android:layout_marginStart="156dp"
-            android:layout_marginLeft="156dp"
+            android:layout_marginEnd="161dp"
             android:layout_marginBottom="116dp"
             android:contentDescription="@string/notes_text"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/notes_open_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>

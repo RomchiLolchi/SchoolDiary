@@ -143,6 +143,8 @@ class DiaryActivity : AppCompatActivity() {
 
         //applicationContext.deleteDatabase("DiaryDB")
 
+
+
         createHelper(applicationContext)
         readableDB = helper.readableDatabase
         writableDB = helper.writableDatabase
@@ -168,6 +170,7 @@ class DiaryActivity : AppCompatActivity() {
         addLessonOldUser.setOnClickListener{
             setVisParams(true, createLessonLayout)
             main_layout.isClickable = false
+            prepareButtons(false)
             prepareButtons(needToClear = true)
         }
 
