@@ -26,47 +26,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="90dp"
+                android:layout_marginTop="250dp"
                 android:layout_marginEnd="90dp"
-                android:layout_marginBottom="3dp"
                 android:gravity="clip_horizontal|center|clip_vertical"
                 android:text="@string/fill_timetable"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/fill_timetable_descr_textView"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent=".5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintWidth_percent=".5"
-                app:layout_constraintHeight_percent=".5"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent=".5" />
 
             <TextView
                 android:id="@+id/fill_timetable_descr_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="14dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="22dp"
-                android:layout_marginBottom="16dp"
                 android:gravity="clip_horizontal|center|clip_vertical"
                 android:text="@string/timetable_descr_text"
-                app:layout_constraintBottom_toTopOf="@+id/new_lesson_button"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent=".5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintWidth_percent=".5"
-                app:layout_constraintHeight_percent=".5"/>
+                app:layout_constraintTop_toBottomOf="@+id/fill_timetable_textView"
+                app:layout_constraintWidth_percent=".5" />
 
             <ImageView
                 android:id="@+id/new_lesson_button"
                 android:layout_width="193dp"
                 android:layout_height="58dp"
-                android:layout_marginStart="110dp"
+                android:layout_marginStart="108dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="110dp"
-                android:layout_marginBottom="250dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/new_lesson"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent=".5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintWidth_percent=".5"
-                app:layout_constraintHeight_percent=".5"/>
+                app:layout_constraintTop_toBottomOf="@+id/fill_timetable_descr_textView"
+                app:layout_constraintWidth_percent=".5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -143,8 +143,6 @@ class DiaryActivity : AppCompatActivity() {
 
         //applicationContext.deleteDatabase("DiaryDB")
 
-
-
         createHelper(applicationContext)
         readableDB = helper.readableDatabase
         writableDB = helper.writableDatabase
