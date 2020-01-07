@@ -39,9 +39,6 @@ class EnterActivity : AppCompatActivity() {
 
         val buttonToDiary = findViewById<ImageView>(R.id.image_open_diary)
         buttonToDiary.setOnClickListener {
-            /*val diaryIntent = Intent(applicationContext, ContentActivity::class.java)
-            intent.putExtra("whichActivity", "diary")
-            intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY*/
             startActivity(Intent(this, DiaryActivity::class.java))
         }
         val buttonToNotes = findViewById<ImageView>(R.id.image_open_notes)

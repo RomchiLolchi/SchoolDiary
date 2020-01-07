@@ -78,7 +78,7 @@
 
             <View
                 android:id="@+id/divider"
-                android:layout_width="409dp"
+                android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/colorBackgroundGray"
                 app:layout_constraintEnd_toEndOf="parent"

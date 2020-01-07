@@ -589,7 +589,13 @@ class DiaryActivity : AppCompatActivity() {
                 cal.set(Calendar.YEAR, year1)
                 cal.set(Calendar.MONTH, month)
                 cal.set(Calendar.DAY_OF_MONTH, day)
+                if(minutes.isNullOrBlank() || minutes.isNullOrEmpty()){
+                    minutes = "0"
+                }
                 cal.set(Calendar.MINUTE, minutes.toInt())
+                if(hours == null){
+                    hours = 0
+                }
                 cal.set(Calendar.HOUR_OF_DAY, hours)
                 lessonDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
                 //Toast.makeText(applicationContext, lessonDayOfWeek, Toast.LENGTH_SHORT).show()

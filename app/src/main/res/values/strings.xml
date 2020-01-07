@@ -1,44 +1,45 @@
-<resources>
-    <string name="app_name">School Diary</string>
-    <string name="diary_text">DIARY</string>
-    <string name="fill_timetable">FILL TIMETABLE FOR A WEEK</string>
-    <string name="notes_text">NOTES</string>
-    <string name="create_note">CREATE IMPORTANT NOTES</string>
-    <string name="timetable_descr_text">Until you do this for end, in this window nothing will change</string>
-    <string name="lessons_name_text">Lesson\'s name</string>
-    <string name="choose_date_text">Choose lesson\'s date</string>
-    <string name="choose_time_text">Choose lesson\'s time</string>
-    <string name="insert_teachers_name_text">Insert teacher\'s name</string>
-    <string name="attachments_text">Attachments:</string>
-    <string name="rating_text">Ratings:</string>
-    <string name="homework_text">Input your homework here</string>
-    <string name="create_lesson_text">Create lesson</string>
-    <string name="add_lesson_text">Add lesson</string>
-    <string name="number_lesson_text">Number in day</string>
-    <string name="max_ratings_error">You can not put more than two ratings</string>
-    <string name="time_text">Lesson\'s start time:</string>
-    <string name="date_text">Lesson\'s date:</string>
-    <string name="lesson_add_text">Lesson has been added!</string>
-    <string name="your_timetable">Your timetable at this moment:</string>
-    <string name="minutes_text">minute</string>
-    <string name="teacher_text">Teacher</string>
-    <string name="ratings_at_lesson">Lesson grade</string>
-    <string name="your_homework_text">H/w:</string>
-    <string name="no_lessons_text">No lessons for today!</string>
-    <string name="update_lesson_text">Update lesson</string>
-    <string name="will_be_added_soon">Will be added soon…</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">School Diary</string>
+    <string name="diary_text" tools:ignore="MissingTranslation">DIARY</string>
+    <string name="fill_timetable" tools:ignore="MissingTranslation">FILL TIMETABLE FOR A WEEK</string>
+    <string name="notes_text" tools:ignore="MissingTranslation">NOTES</string>
+    <string name="create_note" tools:ignore="MissingTranslation">CREATE IMPORTANT NOTES</string>
+    <string name="timetable_descr_text" tools:ignore="MissingTranslation">Until you do this for end, in this window nothing will change</string>
+    <string name="lessons_name_text" tools:ignore="MissingTranslation">Lesson\'s name</string>
+    <string name="choose_date_text" tools:ignore="MissingTranslation">Choose lesson\'s date</string>
+    <string name="choose_time_text" tools:ignore="MissingTranslation">Choose lesson\'s time</string>
+    <string name="insert_teachers_name_text" tools:ignore="MissingTranslation">Insert teacher\'s name</string>
+    <string name="attachments_text" tools:ignore="MissingTranslation">Attachments:</string>
+    <string name="rating_text" tools:ignore="MissingTranslation">Ratings:</string>
+    <string name="homework_text" tools:ignore="MissingTranslation">Input your homework here</string>
+    <string name="create_lesson_text" tools:ignore="MissingTranslation">Create lesson</string>
+    <string name="add_lesson_text" tools:ignore="MissingTranslation">Add lesson</string>
+    <string name="number_lesson_text" tools:ignore="MissingTranslation">Number in day</string>
+    <string name="max_ratings_error" tools:ignore="MissingTranslation">You can not put more than two ratings</string>
+    <string name="time_text" tools:ignore="MissingTranslation">Lesson\'s start time:</string>
+    <string name="date_text" tools:ignore="MissingTranslation">Lesson\'s date:</string>
+    <string name="lesson_add_text" tools:ignore="MissingTranslation">Lesson has been added!</string>
+    <string name="your_timetable" tools:ignore="MissingTranslation">Your timetable at this moment:</string>
+    <string name="minutes_text" tools:ignore="MissingTranslation">minute</string>
+    <string name="teacher_text" tools:ignore="MissingTranslation">Teacher</string>
+    <string name="ratings_at_lesson" tools:ignore="MissingTranslation">Lesson grade</string>
+    <string name="your_homework_text" tools:ignore="MissingTranslation">H/w:</string>
+    <string name="no_lessons_text" tools:ignore="MissingTranslation">No lessons for today!</string>
+    <string name="update_lesson_text" tools:ignore="MissingTranslation">Update lesson</string>
+    <string name="will_be_added_soon" tools:ignore="MissingTranslation">Will be added soon…</string>
 
     <!-- Переменные дней недели -->
-    <string name="monday_text">Monday</string>
-    <string name="tuesday_text">Tuesday</string>
-    <string name="wednesday_text">Wednesday</string>
-    <string name="thursday_text">Thursday</string>
-    <string name="friday_text">Friday</string>
-    <string name="saturday_text">Saturday</string>
+    <string name="monday_text" tools:ignore="MissingTranslation">Monday</string>
+    <string name="tuesday_text" tools:ignore="MissingTranslation">Tuesday</string>
+    <string name="wednesday_text" tools:ignore="MissingTranslation">Wednesday</string>
+    <string name="thursday_text" tools:ignore="MissingTranslation">Thursday</string>
+    <string name="friday_text" tools:ignore="MissingTranslation">Friday</string>
+    <string name="saturday_text" tools:ignore="MissingTranslation">Saturday</string>
+    <string name="sunday_text" tools:ignore="MissingTranslation">Sunday</string>
 
     <!-- Переменные для pagerView и tabLayout -->
-    <string name="today_text">Today</string>
-    <string name="tomorrow_text">Tomorrow</string>
-    <string name="week_text">Week</string>
-    <string name="month_text">Month</string>
+    <string name="today_text" tools:ignore="MissingTranslation">Today</string>
+    <string name="tomorrow_text" tools:ignore="MissingTranslation">Tomorrow</string>
+    <string name="week_text" tools:ignore="MissingTranslation">Week</string>
+    <string name="month_text" tools:ignore="MissingTranslation">Month</string>
 </resources>

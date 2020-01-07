@@ -50,7 +50,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
                     mondayCurs.moveToFirst()
                     for(i in 0 until mondayCurs.count) {
                         if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
-                            readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            readyArrayList.add(Lesson(id = mondayCurs.getInt(mondayCurs.getColumnIndex("_id")), name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
                                 date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                                 time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                                 ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
@@ -68,7 +68,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
                     mondayCurs.moveToFirst()
                     for(i in 0 until mondayCurs.count) {
                         if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
-                            readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            readyArrayList.add(Lesson(id = mondayCurs.getInt(mondayCurs.getColumnIndex("_id")), name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
                                 date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                                 time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                                 ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
@@ -86,7 +86,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
                     mondayCurs.moveToFirst()
                     for(i in 0 until mondayCurs.count) {
                         if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
-                            readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            readyArrayList.add(Lesson(id = mondayCurs.getInt(mondayCurs.getColumnIndex("_id")), name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
                                 date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                                 time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                                 ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
@@ -104,7 +104,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
                     mondayCurs.moveToFirst()
                     for(i in 0 until mondayCurs.count) {
                         if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
-                            readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            readyArrayList.add(Lesson(id = mondayCurs.getInt(mondayCurs.getColumnIndex("_id")), name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
                                 date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                                 time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                                 ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
@@ -122,7 +122,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
                     mondayCurs.moveToFirst()
                     for(i in 0 until mondayCurs.count) {
                         if (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("name")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("name")).isNotBlank()) {
-                            readyArrayList.add(Lesson(name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
+                            readyArrayList.add(Lesson(id = mondayCurs.getInt(mondayCurs.getColumnIndex("_id")), name = mondayCurs.getString(mondayCurs.getColumnIndex("name")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color")),
                                 date = mondayCurs.getString(mondayCurs.getColumnIndex("date")), dayOfWeek = mondayCurs.getString(mondayCurs.getColumnIndex("dayOfWeek")),
                                 time = mondayCurs.getString(mondayCurs.getColumnIndex("time")), teachers = mondayCurs.getString(mondayCurs.getColumnIndex("teacher")),
                                 ratingOne = mondayCurs.getString(mondayCurs.getColumnIndex("ratingOne")), ratingTwo = mondayCurs.getString(mondayCurs.getColumnIndex("ratingTwo")),
@@ -183,13 +183,30 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
             "ERROR"
         }
 
-        val weekDays: Array<String> = dfs.weekdays
         lateinit var dofOut: String
-        val num1 = cal1.get(Calendar.DAY_OF_WEEK)
-        dofOut = if (num1 in 1..7) {
-            weekDays[num1]
-        } else{
-            "ERROR"
+        when(cal1.get(Calendar.DAY_OF_WEEK)){
+            1 -> {
+                dofOut = context1.resources.getText(R.string.monday_text).toString()
+            }
+            2 -> {
+                dofOut = context1.resources.getText(R.string.tuesday_text).toString()
+            }
+            3 -> {
+                dofOut = context1.resources.getText(R.string.wednesday_text).toString()
+            }
+            4 -> {
+                dofOut = context1.resources.getText(R.string.thursday_text).toString()
+            }
+            5 -> {
+                dofOut = context1.resources.getText(R.string.friday_text).toString()
+            }
+            6 -> {
+                dofOut = context1.resources.getText(R.string.saturday_text).toString()
+            }
+            7 -> {
+                dofOut = context1.resources.getText(R.string.sunday_text).toString()
+            }
+            else -> throw RuntimeException("Error in setting day of week")
         }
 
         dayTextView.text = "$dofOut, ${cal1.get(Calendar.DAY_OF_MONTH)} $month"
@@ -244,12 +261,11 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
     private var mode = modeVar
     private var context: Context = contextO
     private val contextVar = contextO
-    public var array: ArrayList<Lesson> = arrayO
+    private var array: ArrayList<Lesson> = arrayO
     var objects = objects
     private val layoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val view = layoutInflater.inflate(R.layout.card_view_layout, null)
-    lateinit var backgroundColor: String
     //TODO Сделать получение длительности урока из настроек
     /**Переменная длительности урока*/
     val minutesOfLesson = 45
@@ -730,7 +746,13 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                     cal.set(Calendar.YEAR, DiaryActivity.year1)
                     cal.set(Calendar.MONTH, DiaryActivity.month)
                     cal.set(Calendar.DAY_OF_MONTH, DiaryActivity.day)
+                    if(DiaryActivity.minutes.isNullOrBlank() || DiaryActivity.minutes.isNullOrEmpty()){
+                        DiaryActivity.minutes = "0"
+                    }
                     cal.set(Calendar.MINUTE, DiaryActivity.minutes.toInt())
+                    if(DiaryActivity.hours == null){
+                        DiaryActivity.hours = 0
+                    }
                     cal.set(Calendar.HOUR_OF_DAY, DiaryActivity.hours)
                     val lessonDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
                     //Toast.makeText(applicationContext, lessonDayOfWeek, Toast.LENGTH_SHORT).show()
@@ -748,7 +770,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                             "time"
                         )}', teacher = '${values.get("teacher")}', ratingOne = '${values.get("ratingOne")}', ratingTwo = '${values.get(
                             "ratingTwo"
-                        )}', homework = '${values.get("homework")}' WHERE name='${array[position].name}' AND color='${array[position].color}' " +
+                        )}', homework = '${values.get("homework")}' WHERE _id = '${array[position].id}' AND name='${array[position].name}' AND color='${array[position].color}' " +
                                 "AND homework='${array[position].homework}' AND teacher='${array[position].teachers}' AND ratingOne='${array[position].ratingOne}'" +
                                 " AND ratingTwo='${array[position].ratingTwo}' AND time='${array[position].time}'"
                     )

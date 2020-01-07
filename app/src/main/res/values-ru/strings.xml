@@ -36,6 +36,7 @@
     <string name="thursday_text">Четверг</string>
     <string name="friday_text">Пятница</string>
     <string name="saturday_text">Суббота</string>
+    <string name="sunday_text">Воскресенье</string>
 
     <!-- Переменные для pagerView и tabLayout -->
     <string name="today_text">Сегодня</string>
