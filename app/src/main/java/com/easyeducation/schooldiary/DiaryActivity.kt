@@ -52,7 +52,7 @@ class DiaryActivity : AppCompatActivity() {
     private lateinit var selColor: ImageView
     private lateinit var calendar: Calendar
 
-    companion object{
+    companion object {
 
         /**Переменная layout'а создания урока*/
         @JvmStatic
@@ -89,7 +89,7 @@ class DiaryActivity : AppCompatActivity() {
         @JvmStatic
         var year1 = 0
         @JvmStatic
-        var minutes = 0
+        var minutes = ""
         @JvmStatic
         var hours = 0
         @JvmStatic
@@ -114,13 +114,7 @@ class DiaryActivity : AppCompatActivity() {
         fun createHelper(context: Context) {
             helper = DBHelper(context, "DiaryDB", null, 4)
         }
-
-        @JvmStatic
-        fun returnMainLayout() : ConstraintLayout {
-            return createLessonLayout
-        }
-
-        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -187,7 +181,7 @@ class DiaryActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(isOldUser()) {
+        if(isOldUser() || newUserLayout.visibility == View.VISIBLE) {
             if (createLessonLayout.visibility == View.VISIBLE) {
                 setVisParams(false, createLessonLayout)
             } else {
@@ -508,20 +502,58 @@ class DiaryActivity : AppCompatActivity() {
                 inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
                 val myCallBack = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                     hours = hourOfDay
-                    minutes = minute
+                    minutes = minute.toString()
+
+                    Log.d("Minutes of lesson", "$minute")
+
+                    if(minute in 0..9){
+                        when(minute){
+                            0 -> {
+                                minutes = "00"
+                            }
+                            1 -> {
+                                minutes = "01"
+                            }
+                            2 -> {
+                                minutes = "02"
+                            }
+                            3 -> {
+                                minutes = "03"
+                            }
+                            4 -> {
+                                minutes = "04"
+                            }
+                            5 -> {
+                                minutes = "05"
+                            }
+                            6 -> {
+                                minutes = "06"
+                            }
+                            7 -> {
+                                minutes = "07"
+                            }
+                            8 -> {
+                                minutes = "08"
+                            }
+                            9 -> {
+                                minutes = "09"
+                            }
+                        }
+                    }
+
                     time = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if(hourOfDay.toString().length == 1){
-                            "0${view.hour}:${view.minute}"
+                            "0${view.hour}:$minutes"
                         }
                         else {
-                            "${view.hour}:${view.minute}"
+                            "${view.hour}:$minutes"
                         }
                     } else {
                         if(hourOfDay.toString().length == 1) {
-                            "0$hourOfDay:$minute"
+                            "0$hourOfDay:$minutes"
                         }
                         else{
-                            "$hourOfDay:$minute"
+                            "$hourOfDay:$minutes"
                         }
                     }
                     lesson_time_edittext.text = SpannableStringBuilder("${resources.getText(R.string.time_text)} $time")
@@ -557,7 +589,7 @@ class DiaryActivity : AppCompatActivity() {
                 cal.set(Calendar.YEAR, year1)
                 cal.set(Calendar.MONTH, month)
                 cal.set(Calendar.DAY_OF_MONTH, day)
-                cal.set(Calendar.MINUTE, minutes)
+                cal.set(Calendar.MINUTE, minutes.toInt())
                 cal.set(Calendar.HOUR_OF_DAY, hours)
                 lessonDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
                 //Toast.makeText(applicationContext, lessonDayOfWeek, Toast.LENGTH_SHORT).show()

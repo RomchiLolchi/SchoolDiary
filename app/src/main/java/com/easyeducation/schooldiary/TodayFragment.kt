@@ -730,7 +730,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                     cal.set(Calendar.YEAR, DiaryActivity.year1)
                     cal.set(Calendar.MONTH, DiaryActivity.month)
                     cal.set(Calendar.DAY_OF_MONTH, DiaryActivity.day)
-                    cal.set(Calendar.MINUTE, DiaryActivity.minutes)
+                    cal.set(Calendar.MINUTE, DiaryActivity.minutes.toInt())
                     cal.set(Calendar.HOUR_OF_DAY, DiaryActivity.hours)
                     val lessonDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
                     //Toast.makeText(applicationContext, lessonDayOfWeek, Toast.LENGTH_SHORT).show()
