@@ -490,7 +490,9 @@ class DiaryActivity : AppCompatActivity() {
                     lesson_date_edittext.text = SpannableStringBuilder("${resources.getText(R.string.date_text)} $day.$month.$year1")
                 }
                 createLessonLayout.post {
-                    DatePickerDialog(this@DiaryActivity, myCallBack, year2, month1, date1).show()
+                    DatePickerDialog(this@DiaryActivity, myCallBack, year2, month1, date1).apply {
+                        show()
+                    }
                 }
             }
 
