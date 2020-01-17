@@ -91,11 +91,11 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
         val cal1 = Calendar.getInstance()
         cal1.set(year2, month1, dayMonth)
 
-        recyclerView = if(myMode == "tomorrow"){
+        if(myMode == "tomorrow"){
             cal1.add(Calendar.DAY_OF_MONTH, 1)
-            view?.findViewById(R.id.recycler_view)!!
+            recyclerView = view?.findViewById(R.id.recycler_view)!!
         } else{
-            view?.findViewById(R.id.recycler_view2)!!
+            recyclerView = view?.findViewById(R.id.recycler_view2)!!
         }
         recyclerView?.visibility = View.VISIBLE
         recyclerView?.isClickable = true
@@ -115,25 +115,25 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
 
         lateinit var dofOut: String
         when(cal1.get(Calendar.DAY_OF_WEEK)){
-            1 -> {
+            2 -> {
                 dofOut = context1.resources.getText(R.string.monday_text).toString()
             }
-            2 -> {
+            3 -> {
                 dofOut = context1.resources.getText(R.string.tuesday_text).toString()
             }
-            3 -> {
+            4 -> {
                 dofOut = context1.resources.getText(R.string.wednesday_text).toString()
             }
-            4 -> {
+            5 -> {
                 dofOut = context1.resources.getText(R.string.thursday_text).toString()
             }
-            5 -> {
+            6 -> {
                 dofOut = context1.resources.getText(R.string.friday_text).toString()
             }
-            6 -> {
+            7 -> {
                 dofOut = context1.resources.getText(R.string.saturday_text).toString()
             }
-            7 -> {
+            1 -> {
                 dofOut = context1.resources.getText(R.string.sunday_text).toString()
             }
             else -> throw RuntimeException("Error in setting day of week")
