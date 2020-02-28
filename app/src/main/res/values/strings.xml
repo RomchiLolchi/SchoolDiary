@@ -27,6 +27,16 @@
     <string name="no_lessons_text" tools:ignore="MissingTranslation">No lessons for today!</string>
     <string name="update_lesson_text" tools:ignore="MissingTranslation">Update lesson</string>
     <string name="will_be_added_soon" tools:ignore="MissingTranslation">Will be added soon…</string>
+    <string name="create_note_text" translatable="false">Create note</string>
+    <string name="create_first_note_text" tools:ignore="MissingTranslation">Create your first note</string>
+    <string name="notes_heading_text" tools:ignore="MissingTranslation">Note\'s heading</string>
+    <string name="notes_maintext_text" tools:ignore="MissingTranslation">Note\'s text</string>
+    <string name="send_note_text" tools:ignore="MissingTranslation">Share note via…</string>
+    <string name="attention_text" tools:ignore="MissingTranslation">Attention!</string>
+    <string name="are_you_sure_deleting_text" tools:ignore="MissingTranslation">Are you sure want to delete this note?</string>
+    <string name="keep_text" tools:ignore="MissingTranslation">Keep</string>
+    <string name="delete_text" tools:ignore="MissingTranslation">Delete</string>
+    <string name="close_text" tools:ignore="MissingTranslation">Close</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text" tools:ignore="MissingTranslation">Monday</string>

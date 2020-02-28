@@ -26,8 +26,8 @@ import com.easyeducation.schooldiary.DiaryActivity.Companion.dayMonth
 import com.easyeducation.schooldiary.DiaryActivity.Companion.dayOfWeek1
 import com.easyeducation.schooldiary.DiaryActivity.Companion.month1
 import com.easyeducation.schooldiary.DiaryActivity.Companion.time
-import com.easyeducation.schooldiary.DiaryActivity.Companion.writableDB
 import com.easyeducation.schooldiary.DiaryActivity.Companion.year2
+import com.easyeducation.schooldiary.EnterActivity.Companion.writableDB
 import kotlinx.android.synthetic.main.activity_diary.view.*
 import kotlinx.android.synthetic.main.card_view_layout.view.*
 import kotlinx.android.synthetic.main.fragment_today.view.*
@@ -72,7 +72,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
     private val myMode = mode
     /**Переменная контекста*/
     private val context1: Context = contextGet
-    val array = objects
+    private val array = objects
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -141,7 +141,7 @@ class TodayFragment(contextGet: Context, mode: String, objects: ArrayList<View>)
 
         dayTextView.text = "$dofOut, ${cal1.get(Calendar.DAY_OF_MONTH)} $month"
 
-        val date: String = "${cal1.get(Calendar.DAY_OF_MONTH)}.${cal1.get(Calendar.MONTH)}.${cal1.get(Calendar.YEAR)}"
+        val date = "${cal1.get(Calendar.DAY_OF_MONTH)}.${cal1.get(Calendar.MONTH)}.${cal1.get(Calendar.YEAR)}"
         if(dayOfWeek1 != 1) {
             lessonsArray = getAndInitData(date)
 
@@ -253,7 +253,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
         holder.minutesOfLesson.text =
             "$minutesOfLesson ${context.resources.getString(R.string.minutes_text)}"
 
-        val cursorColor = DiaryActivity.helper.readableDatabase.rawQuery(
+        val cursorColor = EnterActivity.helper.readableDatabase.rawQuery(
             "SELECT color FROM LESSONS_CARDS WHERE name='${array[position].name}' AND lessonsOrder='${array[position].order}' AND dayOfWeek='${array[position].dayOfWeek}' AND date='${array[position].date}' AND time='${array[position].time}';",
             null
         )

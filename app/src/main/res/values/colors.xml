@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">@color/colorOrange</color>
     <color name="lessons_cards_gray">#878787</color>
+    <color name="color_orange_background">#fdb64d</color>
+    <color name="color_blue_background">#4fc2f6</color>
 
     <!--Цвета для layout'ов создания урока и карточек урока-->
     <color name="colorWhite">#ffffff</color>

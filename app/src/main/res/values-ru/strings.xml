@@ -28,6 +28,16 @@
     <string name="no_lessons_text">На сегодня нет уроков!</string>
     <string name="update_lesson_text">Обновить урок</string>
     <string name="will_be_added_soon">Скоро будет…</string>
+    <string name="create_note_text">Создать заметку</string>
+    <string name="create_first_note_text">Создайте вашу первую заметку</string>
+    <string name="notes_heading_text">Заголовок заметки</string>
+    <string name="notes_maintext_text">Текст заметки</string>
+    <string name="send_note_text">Поделится заметкой через…</string>
+    <string name="attention_text">Внимание!</string>
+    <string name="are_you_sure_deleting_text">Вы точно хотите удалить заметку?</string>
+    <string name="delete_text">Удалить</string>
+    <string name="keep_text">Оставить</string>
+    <string name="close_text">Закрыть</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>

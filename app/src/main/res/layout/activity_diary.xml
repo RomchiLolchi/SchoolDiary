@@ -15,7 +15,7 @@
             android:id="@+id/new_user_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="90dp"
-                android:layout_marginTop="250dp"
+                android:layout_marginTop="300dp"
                 android:layout_marginEnd="90dp"
                 android:gravity="clip_horizontal|center|clip_vertical"
                 android:text="@string/fill_timetable"
@@ -53,20 +53,21 @@
                 app:layout_constraintTop_toBottomOf="@+id/fill_timetable_textView"
                 app:layout_constraintWidth_percent=".5" />
 
-            <ImageView
+            <Button
                 android:id="@+id/new_lesson_button"
                 android:layout_width="193dp"
                 android:layout_height="58dp"
-                android:layout_marginStart="108dp"
+                android:layout_marginStart="109dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="110dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/new_lesson"
+                android:layout_marginEnd="109dp"
+                android:background="@drawable/create_first_lesson_drawable"
+                android:drawableRight="@drawable/add_lesson_image"
+                android:text="@string/add_lesson_text"
+                android:textColor="@color/colorAccent"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_percent=".5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fill_timetable_descr_textView"
-                app:layout_constraintWidth_percent=".5" />
+                app:layout_constraintTop_toBottomOf="@+id/fill_timetable_descr_textView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -161,12 +162,17 @@
 
             <Button
                 android:id="@+id/add_lesson_button"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="121dp"
                 android:layout_height="59dp"
                 android:layout_marginStart="13dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:background="@color/color_orange_background"
                 android:text="@string/add_lesson_text"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/lesson_teacher_edittext"
                 app:layout_constraintTop_toBottomOf="@+id/order_lesson_editText" />
@@ -210,91 +216,91 @@
                     <ImageView
                         android:id="@+id/white_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/white_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/red_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/red_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/orange_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/orange_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/yellow_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/yellow_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/green_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/green_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/blue_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/blue_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/pink_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/pink_rect" />
 
                     <Space
                         android:layout_width="5dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/violet_sel_image"
                         android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:src="@drawable/violet_rect" />
                 </LinearLayout>
@@ -460,7 +466,7 @@
                 android:backgroundTint="@color/colorOrange"
                 android:ems="10"
                 android:hint="@string/homework_text"
-                android:inputType="text"
+                android:inputType="text|textMultiLine"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ratingBarTwo" />

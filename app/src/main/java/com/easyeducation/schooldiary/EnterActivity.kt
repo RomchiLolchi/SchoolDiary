@@ -1,7 +1,10 @@
 package com.easyeducation.schooldiary
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -10,17 +13,54 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.facebook.stetho.Stetho
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import kotlinx.android.synthetic.main.activity_enter.*
+import okhttp3.OkHttpClient
 
 /**
  * Активность, которая вызывается при входе
  */
 class EnterActivity : AppCompatActivity() {
 
+    companion object{
+        /**Helper БД*/
+        @JvmStatic
+        lateinit var helper: DBHelper
+        /**Переменная, хранящая readable БД*/
+        @JvmStatic
+        lateinit var readableDB: SQLiteDatabase
+        /**Переменная, хранящая writable БД*/
+        @JvmStatic
+        lateinit var writableDB: SQLiteDatabase
+
+        @JvmStatic
+        fun createHelper(context: Context) {
+            helper = DBHelper(context, "DiaryDB", null, 5)
+        }
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        //applicationContext.deleteDatabase("DiaryDB")
+
+        //Убрать блок комментариев, когда нужно стереть данные из SQLite
+        /*writableDB.execSQL("delete from LESSONS_CARDS")
+        writableDB.execSQL("delete from TIMETABLE")
+        writableDB.execSQL("delete from NOTES")*/
+
+        Stetho.initializeWithDefaults(this)
+        OkHttpClient.Builder()
+            .addNetworkInterceptor(StethoInterceptor())
+            .build()
+
+        createHelper(applicationContext)
+        readableDB = helper.readableDatabase
+        writableDB = helper.writableDatabase
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val diaryText = findViewById<TextView>(R.id.diary_textview)
@@ -43,7 +83,7 @@ class EnterActivity : AppCompatActivity() {
         }
         val buttonToNotes = findViewById<ImageView>(R.id.image_open_notes)
         buttonToNotes.setOnClickListener {
-            Toast.makeText(applicationContext, "Скоро будет...", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, NotesActivity::class.java))
         }
 
         val display = windowManager.defaultDisplay

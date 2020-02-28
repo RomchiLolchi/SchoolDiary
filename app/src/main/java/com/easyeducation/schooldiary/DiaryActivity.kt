@@ -25,6 +25,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.easyeducation.schooldiary.EnterActivity.Companion.createHelper
+import com.easyeducation.schooldiary.EnterActivity.Companion.helper
+import com.easyeducation.schooldiary.EnterActivity.Companion.readableDB
+import com.easyeducation.schooldiary.EnterActivity.Companion.writableDB
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.material.tabs.TabLayout
@@ -100,22 +104,10 @@ class DiaryActivity : AppCompatActivity() {
         var minutes1 = 0
         var date1 = 15
 
-        /**Helper БД*/
-        @JvmStatic
-        lateinit var helper: DBHelper
-        /**Переменная, хранящая readable БД*/
-        @JvmStatic
-        lateinit var readableDB: SQLiteDatabase
-        /**Переменная, хранящая writable БД*/
-        @JvmStatic
-        lateinit var writableDB: SQLiteDatabase
 
-        @JvmStatic
-        fun createHelper(context: Context) {
-            helper = DBHelper(context, "DiaryDB", null, 4)
-        }
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary)
@@ -134,23 +126,6 @@ class DiaryActivity : AppCompatActivity() {
         year2 = calendar.get(Calendar.YEAR)
         hours1 = calendar.get(Calendar.HOUR_OF_DAY)
         minutes1 = calendar.get(Calendar.MINUTE)
-
-        //applicationContext.deleteDatabase("DiaryDB")
-
-        createHelper(applicationContext)
-        readableDB = helper.readableDatabase
-        writableDB = helper.writableDatabase
-
-        //Убрать блок комментариев, когда нужно стереть данные из SQLite
-        /*writableDB.execSQL("delete from LESSONS_CARDS")
-        writableDB.execSQL("delete from TIMETABLE")*/
-
-        //writableDB.delete("LESSONS_CARDS", "_id = ?", arrayOf("18"))
-
-        Stetho.initializeWithDefaults(this)
-        OkHttpClient.Builder()
-            .addNetworkInterceptor(StethoInterceptor())
-            .build()
 
         ratingBar2 = findViewById(R.id.ratingBarTwo)
         ratingBar2.isClickable = false
@@ -271,7 +246,7 @@ class DiaryActivity : AppCompatActivity() {
             color = "white"
         }
         else {
-            val newLesson = findViewById<ImageView>(R.id.new_lesson_button)
+            val newLesson = findViewById<Button>(R.id.new_lesson_button)
             newLesson.setOnClickListener {
                 setVisParams(true, createLessonLayout)
                 main_layout.isClickable = false
