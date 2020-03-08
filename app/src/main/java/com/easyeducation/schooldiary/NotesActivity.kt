@@ -19,10 +19,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.easyeducation.schooldiary.NotesActivity.Companion.getAndFillData
 import com.easyeducation.schooldiary.NotesActivity.Companion.recyclerView
+import com.etsy.android.grid.StaggeredGridView
 import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_notes.*
 import kotlinx.android.synthetic.main.activity_notes.view.*
@@ -67,10 +69,10 @@ class NotesActivity : AppCompatActivity() {
         private fun getAndFillData(context: Context, recyclerView: RecyclerView, method: () -> Unit) {
             val readyArrayList = ArrayList<Note>()
 
-            val mondayCurs = EnterActivity.writableDB.rawQuery("SELECT * FROM NOTES ORDER BY _id ASC;", null)
+            val mondayCurs = EnterActivity.writableDB.rawQuery("SELECT * FROM NOTES;", null)
             mondayCurs.moveToFirst()
             for(i in 0 until mondayCurs.count) {
-                if ((mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("headline")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("headline")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("headline")).isNotBlank()) || (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("headline")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("headline")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("headline")).isNotBlank())) {
+                if ((mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("headline")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("headline")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("headline")).isNotBlank()) || (mondayCurs.count > 0 && mondayCurs.getString(mondayCurs.getColumnIndex("mainText")) != null && mondayCurs.getString(mondayCurs.getColumnIndex("mainText")).isNotEmpty() && mondayCurs.getString(mondayCurs.getColumnIndex("mainText")).isNotBlank())) {
                     readyArrayList.add(Note(headlineIn = mondayCurs.getString(mondayCurs.getColumnIndex("headline")), mainTextIn = mondayCurs.getString(mondayCurs.getColumnIndex("mainText")), timeIn = mondayCurs.getString(mondayCurs.getColumnIndex("time")), dateIn = mondayCurs.getString(mondayCurs.getColumnIndex("date")), color = mondayCurs.getString(mondayCurs.getColumnIndex("color"))))
                     mondayCurs.moveToNext()
                 }
@@ -81,7 +83,7 @@ class NotesActivity : AppCompatActivity() {
             mondayCurs.close()
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = StaggeredGridLayoutManager(2, Configuration.ORIENTATION_PORTRAIT)
+            recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerView.adapter = NotesAdapter(context, readyArrayList, map, { context, recyclerView -> getAndFillData(context, recyclerView, method)}, method)
         }
     }
@@ -103,6 +105,18 @@ class NotesActivity : AppCompatActivity() {
         oldUserLayout = findViewById(R.id.old_notes_user_layout)
         createNoteLayout = findViewById(R.id.create_note_layout)
 
+        add_note_olduser_button.setOnClickListener {
+            create_note_layout.visibility = View.VISIBLE
+            create_note_layout.isClickable = true
+            prepareButtons()
+        }
+
+        new_note_button.setOnClickListener{
+            create_note_layout.visibility = View.VISIBLE
+            create_note_layout.isClickable = true
+            prepareButtons()
+        }
+
         prepareButtons()
         if(isOldUser()){
             prepareButtons()
@@ -122,12 +136,6 @@ class NotesActivity : AppCompatActivity() {
             oldUserLayout.visibility = View.INVISIBLE
             oldUserLayout.isClickable = false
         }
-        new_note_button.setOnClickListener {
-            createNoteLayout.visibility = View.VISIBLE
-            createNoteLayout.isClickable = true
-            new_notes_user_layout.visibility = View.GONE
-            new_notes_user_layout.isClickable = false
-        }
     }
 
     override fun onBackPressed() {
@@ -142,7 +150,10 @@ class NotesActivity : AppCompatActivity() {
         }
     }
 
-    private fun prepareButtons(){
+    private fun prepareButtons() {
+        color = "white"
+        create_note_layout.background = resources.getDrawable(R.drawable.white_border)
+
         //Подготовка заголовка заметки
         val noteHeading = findViewById<EditText>(R.id.note_headline_textView)
         noteHeading.hint = resources.getText(R.string.notes_heading_text)
@@ -159,19 +170,21 @@ class NotesActivity : AppCompatActivity() {
         val selectColor = findViewById<ImageView>(R.id.choose_color_notes)
         selectColor.setImageDrawable(resources.getDrawable(R.drawable.white_rect, null))
         selectColor.setOnClickListener {
-            if(isOpen){
+            if (isOpen) {
                 isOpen = false
                 notes_color_scroll.visibility = View.INVISIBLE
-            }
-            else{
+            } else {
                 isOpen = true
                 notes_color_scroll.visibility = View.VISIBLE
             }
         }
-        if(!noteHeading.text.isNullOrEmpty() && !noteHeading.text.isNullOrBlank() && !noteText.text.isNullOrEmpty() && !noteText.text.isNullOrBlank()) {
-            val colorCurs = EnterActivity.writableDB.rawQuery("SELECT color FROM NOTES WHERE headline=\"${noteHeading.text}\" AND mainText=\"${noteText.text}\"", null)
-            if(colorCurs != null && colorCurs.moveToFirst()) {
-               color = colorCurs.getString(colorCurs.getColumnIndex("color"))
+        if (!noteHeading.text.isNullOrEmpty() && !noteHeading.text.isNullOrBlank() && !noteText.text.isNullOrEmpty() && !noteText.text.isNullOrBlank()) {
+            val colorCurs = EnterActivity.writableDB.rawQuery(
+                "SELECT color FROM NOTES WHERE headline=\"${noteHeading.text}\" AND mainText=\"${noteText.text}\"",
+                null
+            )
+            if (colorCurs != null && colorCurs.moveToFirst()) {
+                color = colorCurs.getString(colorCurs.getColumnIndex("color"))
             }
             colorCurs.close()
         }
@@ -227,19 +240,24 @@ class NotesActivity : AppCompatActivity() {
         }
         //Настройка нижних кнопок
         notes_add_checklist.setOnClickListener {
-            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT)
+                .show()
         }
         notes_add_image.setOnClickListener {
-            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT)
+                .show()
         }
         notes_add_checklist.setOnClickListener {
-            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT)
+                .show()
         }
         notes_add_audio.setOnClickListener {
-            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT)
+                .show()
         }
         notes_add_reminder.setOnClickListener {
-            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.will_be_added_soon, Toast.LENGTH_SHORT)
+                .show()
         }
         notes_share.setOnClickListener {
             val sendIntent = Intent(Intent.ACTION_SEND).apply {
@@ -247,7 +265,8 @@ class NotesActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_TEXT, noteText.text.toString())
                 type = "text/plain"
             }
-            val actionIntent = Intent.createChooser(sendIntent, resources.getString(R.string.send_note_text))
+            val actionIntent =
+                Intent.createChooser(sendIntent, resources.getString(R.string.send_note_text))
             startActivity(actionIntent)
         }
         notes_delete.setOnClickListener {
@@ -258,7 +277,7 @@ class NotesActivity : AppCompatActivity() {
                 setCancelable(true)
                 setNegativeButton(R.string.delete_text) { dialogInterface: DialogInterface, i: Int ->
                     EnterActivity.writableDB.execSQL("DELETE FROM NOTES WHERE headline='${noteHeading.text}' AND mainText='${noteText.text}' AND color='$color'")
-                    if(isOldUser()){
+                    if (isOldUser()) {
                         getAndFillData(applicationContext, recyclerView, ::prepareButtons)
                         create_note_layout.visibility = View.INVISIBLE
                         create_note_layout.isClickable = false
@@ -266,8 +285,7 @@ class NotesActivity : AppCompatActivity() {
                         new_notes_user_layout.isClickable = false
                         old_notes_user_layout.visibility = View.VISIBLE
                         old_notes_user_layout.isClickable = true
-                    }
-                    else {
+                    } else {
                         create_note_layout.visibility = View.INVISIBLE
                         create_note_layout.isClickable = false
                         new_notes_user_layout.visibility = View.VISIBLE
@@ -295,7 +313,7 @@ class NotesActivity : AppCompatActivity() {
             create_note_layout.visibility = View.INVISIBLE
             create_note_layout.isClickable = false
 
-            if(isOldUser()){
+            if (isOldUser()) {
                 getAndFillData(applicationContext, recyclerView, ::prepareButtons)
                 create_note_layout.visibility = View.INVISIBLE
                 create_note_layout.isClickable = false
@@ -303,8 +321,7 @@ class NotesActivity : AppCompatActivity() {
                 new_notes_user_layout.isClickable = false
                 old_notes_user_layout.visibility = View.VISIBLE
                 old_notes_user_layout.isClickable = true
-            }
-            else {
+            } else {
                 create_note_layout.visibility = View.INVISIBLE
                 create_note_layout.isClickable = false
                 new_notes_user_layout.visibility = View.VISIBLE
@@ -336,6 +353,9 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
         holder.oldUserLayout.isClickable = true
         holder.createNoteLayout.visibility = View.INVISIBLE
         holder.createNoteLayout.isClickable = false
+
+        //holder.noteItemLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT - 1, LinearLayout.LayoutParams.WRAP_CONTENT)
+        NotesActivity.color = array[position].color
 
         when(NotesActivity.color){
             "white" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.white_border)
@@ -373,6 +393,8 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
             NotesActivity.oldUserLayout.isClickable = false
             NotesActivity.createNoteLayout.visibility = View.VISIBLE
             NotesActivity.createNoteLayout.isClickable = true
+
+            NotesActivity.color = array[position].color
 
             when(NotesActivity.color){
                 "white" -> {
@@ -413,14 +435,14 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                 holder.expandNoteHeadline.text = array[position].headlineIn
             }
             else{
-                holder.expandNoteHeadline.text = context.resources.getString(R.string.notes_heading_text)
+                holder.expandNoteHeadline.hint = context.resources.getString(R.string.notes_heading_text)
             }
 
             if(!isTextNull){
                 holder.expandNoteMainText.text = array[position].mainTextIn
             }
             else{
-                holder.expandNoteMainText.text = context.resources.getString(R.string.notes_maintext_text)
+                holder.expandNoteMainText.hint = context.resources.getString(R.string.notes_maintext_text)
             }
 
             holder.createNoteButton.text = context.resources.getString(R.string.close_text)
@@ -432,16 +454,21 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                 NotesActivity.createNoteLayout.visibility = View.INVISIBLE
                 NotesActivity.createNoteLayout.isClickable = false
 
+                array[position].color = NotesActivity.color
+
                 val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(holder.view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
                 //TODO Делать также с датой, временем и т.д
+                if(array[position].headlineIn != holder.expandNoteHeadline.text.toString()) {
+                    array[position].headlineIn = holder.expandNoteHeadline.text.toString()
+                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET headline='${holder.expandNoteHeadline.text}' WHERE mainText='${holder.mainText.text}' AND color='${array[position].color}';")
+                }
 
-                array[position].headlineIn = holder.expandNoteHeadline.text.toString()
-                EnterActivity.writableDB.execSQL("UPDATE NOTES SET headline='${holder.expandNoteHeadline.text}' WHERE mainText='${holder.mainText.text}' AND color='${array[position].color}';")
-
-                array[position].mainTextIn = holder.expandNoteMainText.text.toString()
-                EnterActivity.writableDB.execSQL("UPDATE NOTES SET mainText='${holder.expandNoteMainText.text}' WHERE headline='${holder.expandNoteHeadline.text}' AND color='${array[position].color}';")
+                if(array[position].mainTextIn != holder.expandNoteMainText.text.toString()) {
+                    array[position].mainTextIn = holder.expandNoteMainText.text.toString()
+                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET mainText='${holder.expandNoteMainText.text}' WHERE headline='${holder.expandNoteHeadline.text}' AND color='${array[position].color}';")
+                }
 
                 array[position].color = NotesActivity.color
                 EnterActivity.writableDB.execSQL("UPDATE NOTES SET color='${NotesActivity.color}' WHERE mainText='${holder.expandNoteMainText.text}' AND headline='${holder.expandNoteHeadline.text}';")
