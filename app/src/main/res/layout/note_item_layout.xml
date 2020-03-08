@@ -34,7 +34,8 @@
             android:layout_margin="3dp"
             android:text="@string/notes_heading_text"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:singleLine="false"/>
 
         <TextView
             android:id="@+id/maintext_note_item"
@@ -42,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:text="@string/notes_maintext_text"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:singleLine="false"/>
 
     </LinearLayout>
 

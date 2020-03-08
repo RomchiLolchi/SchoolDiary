@@ -83,7 +83,7 @@ class NotesActivity : AppCompatActivity() {
             mondayCurs.close()
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            recyclerView.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
             recyclerView.adapter = NotesAdapter(context, readyArrayList, map, { context, recyclerView -> getAndFillData(context, recyclerView, method)}, method)
         }
     }
@@ -354,7 +354,7 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
         holder.createNoteLayout.visibility = View.INVISIBLE
         holder.createNoteLayout.isClickable = false
 
-        //holder.noteItemLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT - 1, LinearLayout.LayoutParams.WRAP_CONTENT)
+        holder.noteItemLayout.layoutParams = LinearLayout.LayoutParams(holder.noteItemLayout.width - 3, LinearLayout.LayoutParams.WRAP_CONTENT)
         NotesActivity.color = array[position].color
 
         when(NotesActivity.color){
@@ -480,7 +480,9 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                     "white" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.white_border)
                     "red" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.red_border)
                     "orange" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.orange_border)
-                    "yellow" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.yellow_border)
+                    "yellow" -> holder
+
+                        .noteItemLayout.background = context.resources.getDrawable(R.drawable.yellow_border)
                     "green" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.green_border)
                     "blue" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.blue_border)
                     "pink" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.pink_border)
