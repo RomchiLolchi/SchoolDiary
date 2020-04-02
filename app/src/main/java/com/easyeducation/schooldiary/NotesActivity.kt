@@ -6,12 +6,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.text.SpannableStringBuilder
+import android.view.Display
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +31,7 @@ import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_notes.*
 import kotlinx.android.synthetic.main.activity_notes.view.*
 import kotlinx.android.synthetic.main.note_item_layout.view.*
+import java.lang.reflect.Array.get
 
 class NotesActivity : AppCompatActivity() {
 
@@ -83,7 +86,7 @@ class NotesActivity : AppCompatActivity() {
             mondayCurs.close()
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+            recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerView.adapter = NotesAdapter(context, readyArrayList, map, { context, recyclerView -> getAndFillData(context, recyclerView, method)}, method)
         }
     }
@@ -92,6 +95,7 @@ class NotesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
+        setTheme(R.style.NotesTheme)
         supportActionBar?.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -139,7 +143,6 @@ class NotesActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         if(create_note_layout.visibility == View.VISIBLE){
             create_note_layout.visibility = View.INVISIBLE
             create_note_layout.isClickable = false
@@ -302,14 +305,23 @@ class NotesActivity : AppCompatActivity() {
             }
         }
         new_note_button.visibility = View.VISIBLE
+        add_note.setText(R.string.create_note_text)
         add_note.setOnClickListener {
+            val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+
             val values = ContentValues()
             values.put("headline", noteHeading.text.toString())
             values.put("mainText", noteText.text.toString())
             values.put("time", "0")
             values.put("date", "0")
             values.put("color", color)
-            EnterActivity.writableDB.insertOrThrow("NOTES", null, values)
+            if((!values.get("headline").toString().isNullOrBlank() || !values.get("headline").toString().isNullOrEmpty()) || (!values.get("mainText").toString().isNullOrBlank() || !values.get("mainText").toString().isNullOrEmpty())) {
+                EnterActivity.writableDB.insertOrThrow("NOTES", null, values)
+            }
+            else {
+               Toast.makeText(applicationContext, getText(R.string.alert_of_creating_empty_note), Toast.LENGTH_LONG).show()
+            }
             create_note_layout.visibility = View.INVISIBLE
             create_note_layout.isClickable = false
 
@@ -332,7 +344,9 @@ class NotesActivity : AppCompatActivity() {
         }
     }
 }
-
+/**
+ * Адаптер для RecyclerView
+ */
 class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects: MutableMap<String, View>, private val dataPrepare: (Context, RecyclerView) -> Unit, private val prepareButtons: () -> Unit) : RecyclerView.Adapter<NotesAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -353,6 +367,11 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
         holder.oldUserLayout.isClickable = true
         holder.createNoteLayout.visibility = View.INVISIBLE
         holder.createNoteLayout.isClickable = false
+
+        val lp = LinearLayout.LayoutParams((EnterActivity.display.width / 2) - 50, LinearLayout.LayoutParams.WRAP_CONTENT)
+        holder.noteItemLayout.layoutParams = lp
+        holder.mainText.layoutParams = lp
+        holder.title.layoutParams = lp
 
         holder.noteItemLayout.layoutParams = LinearLayout.LayoutParams(holder.noteItemLayout.width - 3, LinearLayout.LayoutParams.WRAP_CONTENT)
         NotesActivity.color = array[position].color
@@ -393,6 +412,7 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
             NotesActivity.oldUserLayout.isClickable = false
             NotesActivity.createNoteLayout.visibility = View.VISIBLE
             NotesActivity.createNoteLayout.isClickable = true
+            recyclerView.isClickable = false
 
             NotesActivity.color = array[position].color
 
@@ -431,6 +451,11 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                 }
             }
 
+            holder.expandNoteHeadline.hint = context.resources.getString(R.string.notes_heading_text)
+            holder.expandNoteHeadline.text = ""
+            holder.expandNoteMainText.hint = context.resources.getString(R.string.notes_maintext_text)
+            holder.expandNoteMainText.text = ""
+
             if(!isHeaderNull){
                 holder.expandNoteHeadline.text = array[position].headlineIn
             }
@@ -453,36 +478,43 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                 NotesActivity.oldUserLayout.isClickable = true
                 NotesActivity.createNoteLayout.visibility = View.INVISIBLE
                 NotesActivity.createNoteLayout.isClickable = false
-
-                array[position].color = NotesActivity.color
+                recyclerView.isClickable = true
 
                 val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(holder.view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-                //TODO Делать также с датой, временем и т.д
-                if(array[position].headlineIn != holder.expandNoteHeadline.text.toString()) {
-                    array[position].headlineIn = holder.expandNoteHeadline.text.toString()
-                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET headline='${holder.expandNoteHeadline.text}' WHERE mainText='${holder.mainText.text}' AND color='${array[position].color}';")
-                }
-
-                if(array[position].mainTextIn != holder.expandNoteMainText.text.toString()) {
-                    array[position].mainTextIn = holder.expandNoteMainText.text.toString()
-                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET mainText='${holder.expandNoteMainText.text}' WHERE headline='${holder.expandNoteHeadline.text}' AND color='${array[position].color}';")
-                }
-
                 array[position].color = NotesActivity.color
-                EnterActivity.writableDB.execSQL("UPDATE NOTES SET color='${NotesActivity.color}' WHERE mainText='${holder.expandNoteMainText.text}' AND headline='${holder.expandNoteHeadline.text}';")
 
-                holder.title.text = array[position].headlineIn
-                holder.mainText.text = array[position].mainTextIn
+                if((!holder.expandNoteHeadline.text.toString().isNullOrBlank() || holder.expandNoteHeadline.text.toString().isNullOrEmpty()) || (!holder.expandNoteMainText.text.toString().isNullOrBlank() || !holder.expandNoteMainText.text.toString().isNullOrEmpty())) {
+
+                    //TODO Делать также с датой, временем и т.д
+                    array[position].headlineIn = holder.expandNoteHeadline.text.toString()
+                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET headline=\"${holder.expandNoteHeadline.text}\" WHERE mainText=\"${holder.mainText.text}'\" AND color=\"${array[position].color}\";")
+
+                    array[position].mainTextIn = holder.expandNoteMainText.text.toString()
+                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET mainText=\"${holder.expandNoteMainText.text}\" WHERE headline=\"${holder.expandNoteHeadline.text}\" AND color=\"${array[position].color}\";")
+
+                    array[position].color = NotesActivity.color
+                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET color=\"${NotesActivity.color}\" WHERE mainText=\"${holder.expandNoteMainText.text}\" AND headline=\"${holder.expandNoteHeadline.text}\";")
+                }
+                else{
+                    EnterActivity.writableDB.execSQL("DELETE NOTES WHERE headline=\"${holder.expandNoteHeadline.text}\" AND color=\"${array[position].color}\" AND mainText=\"${holder.expandNoteMainText.text}\";")
+                    Toast.makeText(context, context.getText(R.string.alert_of_creating_empty_note), Toast.LENGTH_LONG).show()
+                }
+                holder.title.text = holder.expandNoteHeadline.text.toString()
+                holder.mainText.text = holder.expandNoteMainText.text.toString()
+
+                holder.noteItemLayout.invalidate()
+                holder.title.invalidate()
+                holder.mainText.invalidate()
+
+                dataPrepare
 
                 when(NotesActivity.color){
                     "white" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.white_border)
                     "red" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.red_border)
                     "orange" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.orange_border)
-                    "yellow" -> holder
-
-                        .noteItemLayout.background = context.resources.getDrawable(R.drawable.yellow_border)
+                    "yellow" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.yellow_border)
                     "green" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.green_border)
                     "blue" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.blue_border)
                     "pink" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.pink_border)
@@ -490,12 +522,16 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                 }
 
                 holder.noteItemLayout.invalidate()
-
-                dataPrepare
+                holder.title.invalidate()
+                holder.mainText.invalidate()
                 recyclerView.invalidate()
 
                 holder.createNoteButton.text = context.resources.getString(R.string.create_note_text)
                 prepareButtons
+                /*val intent = Intent(context, NotesActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)*/
             }
         }
     }

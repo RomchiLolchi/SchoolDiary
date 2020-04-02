@@ -38,6 +38,7 @@
     <string name="delete_text">Удалить</string>
     <string name="keep_text">Оставить</string>
     <string name="close_text">Закрыть</string>
+    <string name="alert_of_creating_empty_note">Пустая заметка была удалена</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>

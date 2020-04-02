@@ -111,6 +111,7 @@ class DiaryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary)
+        setTheme(R.style.DiaryTheme)
         supportActionBar?.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         /**Переменная view для вызова findViewById()*/
@@ -544,7 +545,7 @@ class DiaryActivity : AppCompatActivity() {
             addLesson.text = applicationContext.resources.getString(R.string.add_lesson_text)
             addLesson.setOnClickListener {
                 val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
+                inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
                 if(time == "time"){
                     time = "12:0"
@@ -591,13 +592,6 @@ class DiaryActivity : AppCompatActivity() {
 
                 writableDB.insertOrThrow("LESSONS_CARDS", null, values)
 
-                val values1 = ContentValues()
-                values1.put("name", lesson_name_edittext.text.toString())
-                values1.put("lessonsOrder", order_lesson_editText.text.toString())
-                values1.put("dayOfWeek", lessonDayOfWeek)
-
-                writableDB.insertOrThrow("TIMETABLE", null, values1)
-
                 Log.d("DB debug", "Data of lesson in content values:\n" +
                         "name: ${values.get("name")}\n" +
                         "color: ${values.get("color")}\n" +
@@ -605,7 +599,7 @@ class DiaryActivity : AppCompatActivity() {
                         "dayOfWeek: ${values.get("dayOfWeek")}\n" +
                         "time: ${values.get("time")}\n" +
                         "teacher: ${values.get("teacher")}\n" +
-                        "order: ${values1.get("lessonsOrder")}\n" +
+                        "order: ${values.get("lessonsOrder")}\n" +
                         "ratingOne: ${values.get("ratingOne")}\n" +
                         "ratingTwo: ${values.get("ratingTwo")}\n" +
                         "homework: ${values.get("homework")}")

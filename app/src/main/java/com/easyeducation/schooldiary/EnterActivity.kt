@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.view.Display
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -38,12 +39,16 @@ class EnterActivity : AppCompatActivity() {
         fun createHelper(context: Context) {
             helper = DBHelper(context, "DiaryDB", null, 5)
         }
+
+        /**Переменная дисплея (для получения ширины и высоты)*/
+        lateinit var display: Display
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_enter)
+        setTheme(R.style.DiaryTheme)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         //applicationContext.deleteDatabase("DiaryDB")
@@ -86,7 +91,7 @@ class EnterActivity : AppCompatActivity() {
             startActivity(Intent(this, NotesActivity::class.java))
         }
 
-        val display = windowManager.defaultDisplay
+        display = windowManager.defaultDisplay
         diary_layout.layoutParams = ConstraintLayout.LayoutParams(display.width, display.height/2 + 65)
         notes_layout.layoutParams = ConstraintLayout.LayoutParams(display.width, display.height/2 + 65)
         notes_layout.y = diary_layout.y + diary_layout.height + display.height / 2

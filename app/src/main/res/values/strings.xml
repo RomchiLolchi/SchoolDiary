@@ -37,6 +37,7 @@
     <string name="keep_text" tools:ignore="MissingTranslation">Keep</string>
     <string name="delete_text" tools:ignore="MissingTranslation">Delete</string>
     <string name="close_text" tools:ignore="MissingTranslation">Close</string>
+    <string name="alert_of_creating_empty_note" tools:ignore="MissingTranslation">Empty note has been deleted</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text" tools:ignore="MissingTranslation">Monday</string>

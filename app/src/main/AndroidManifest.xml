@@ -11,7 +11,7 @@
         android:screenOrientation="portrait"
         android:supportsPictureInPicture="false"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/DiaryTheme">
         <activity android:name=".NotesActivity"></activity>
         <activity
             android:name=".EnterActivity"
