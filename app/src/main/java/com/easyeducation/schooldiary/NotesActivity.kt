@@ -31,7 +31,9 @@ import com.facebook.stetho.Stetho
 import kotlinx.android.synthetic.main.activity_notes.*
 import kotlinx.android.synthetic.main.activity_notes.view.*
 import kotlinx.android.synthetic.main.note_item_layout.view.*
+import java.lang.StringBuilder
 import java.lang.reflect.Array.get
+import kotlin.math.ceil
 
 class NotesActivity : AppCompatActivity() {
 
@@ -88,6 +90,7 @@ class NotesActivity : AppCompatActivity() {
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             recyclerView.adapter = NotesAdapter(context, readyArrayList, map, { context, recyclerView -> getAndFillData(context, recyclerView, method)}, method)
+            recyclerView.invalidate()
         }
     }
 
@@ -349,11 +352,13 @@ class NotesActivity : AppCompatActivity() {
  */
 class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects: MutableMap<String, View>, private val dataPrepare: (Context, RecyclerView) -> Unit, private val prepareButtons: () -> Unit) : RecyclerView.Adapter<NotesAdapter.ViewHolder>(){
 
+    private lateinit var view: View
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(context).inflate(R.layout.note_item_layout, parent,false)
-        objects.putAll(mapOf(Pair("image", v.findViewById<ImageView>(R.id.image_note_item)), Pair("title", v.findViewById<TextView>(R.id.headline_note_item)),
-            Pair("mainText", v.findViewById<TextView>(R.id.maintext_note_item)), Pair("noteItemLayout", v.findViewById<LinearLayout>(R.id.note_item_layout))))
-        return ViewHolder(v, objects)
+        view = LayoutInflater.from(context).inflate(R.layout.note_item_layout, parent,false)
+        objects.putAll(mapOf(Pair("image", view.findViewById<ImageView>(R.id.image_note_item)), Pair("title", view.findViewById<TextView>(R.id.headline_note_item)),
+            Pair("mainText", view.findViewById<TextView>(R.id.maintext_note_item)), Pair("noteItemLayout", view.findViewById<LinearLayout>(R.id.note_item_layout))))
+        return ViewHolder(view, objects)
     }
 
     override fun getItemCount(): Int {
@@ -361,6 +366,8 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val standardHeight = holder.image.height + holder.title.height + holder.mainText.height
+
         holder.noteItemLayout.visibility = View.VISIBLE
         holder.noteItemLayout.isClickable = true
         holder.oldUserLayout.visibility = View.VISIBLE
@@ -483,34 +490,27 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                 val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(holder.view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
+                //TODO Делать также с датой, временем и т.д
+
+                array[position].headlineIn = holder.expandNoteHeadline.text.toString()
+                EnterActivity.writableDB.execSQL("UPDATE NOTES SET headline=\"${holder.expandNoteHeadline.text}\" WHERE mainText=\"${array[position].mainTextIn}\" AND color=\"${array[position].color}\";")
+
+                array[position].mainTextIn = holder.expandNoteMainText.text.toString()
+                EnterActivity.writableDB.execSQL("UPDATE NOTES SET mainText=\"${holder.expandNoteMainText.text}\" WHERE headline=\"${array[position].headlineIn}\" AND color=\"${array[position].color}\";")
+
                 array[position].color = NotesActivity.color
+                EnterActivity.writableDB.execSQL("UPDATE NOTES SET color=\"${NotesActivity.color}\" WHERE mainText=\"${array[position].mainTextIn}\" AND headline=\"${holder.expandNoteHeadline.text}\";")
 
-                if((!holder.expandNoteHeadline.text.toString().isNullOrBlank() || holder.expandNoteHeadline.text.toString().isNullOrEmpty()) || (!holder.expandNoteMainText.text.toString().isNullOrBlank() || !holder.expandNoteMainText.text.toString().isNullOrEmpty())) {
-
-                    //TODO Делать также с датой, временем и т.д
-                    array[position].headlineIn = holder.expandNoteHeadline.text.toString()
-                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET headline=\"${holder.expandNoteHeadline.text}\" WHERE mainText=\"${holder.mainText.text}'\" AND color=\"${array[position].color}\";")
-
-                    array[position].mainTextIn = holder.expandNoteMainText.text.toString()
-                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET mainText=\"${holder.expandNoteMainText.text}\" WHERE headline=\"${holder.expandNoteHeadline.text}\" AND color=\"${array[position].color}\";")
-
-                    array[position].color = NotesActivity.color
-                    EnterActivity.writableDB.execSQL("UPDATE NOTES SET color=\"${NotesActivity.color}\" WHERE mainText=\"${holder.expandNoteMainText.text}\" AND headline=\"${holder.expandNoteHeadline.text}\";")
-                }
-                else{
-                    EnterActivity.writableDB.execSQL("DELETE NOTES WHERE headline=\"${holder.expandNoteHeadline.text}\" AND color=\"${array[position].color}\" AND mainText=\"${holder.expandNoteMainText.text}\";")
-                    Toast.makeText(context, context.getText(R.string.alert_of_creating_empty_note), Toast.LENGTH_LONG).show()
-                }
                 holder.title.text = holder.expandNoteHeadline.text.toString()
                 holder.mainText.text = holder.expandNoteMainText.text.toString()
-
-                holder.noteItemLayout.invalidate()
-                holder.title.invalidate()
-                holder.mainText.invalidate()
-
-                dataPrepare
-
-                when(NotesActivity.color){
+                                                                   
+                holder.noteItemLayout.postInvalidate()             
+                holder.title.postInvalidate()                      
+                holder.mainText.postInvalidate()                   
+                                                                   
+                dataPrepare(context, recyclerView)
+                                                                   
+                when(NotesActivity.color){                         
                     "white" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.white_border)
                     "red" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.red_border)
                     "orange" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.orange_border)
@@ -521,17 +521,17 @@ class NotesAdapter(var context: Context, var array: ArrayList<Note>, var objects
                     "violet" -> holder.noteItemLayout.background = context.resources.getDrawable(R.drawable.violet_border)
                 }
 
-                holder.noteItemLayout.invalidate()
-                holder.title.invalidate()
-                holder.mainText.invalidate()
-                recyclerView.invalidate()
+                view.postInvalidate()
+                //view.invalidate()
+
+                holder.title.postInvalidate()
+                holder.mainText.postInvalidate()
+                holder.noteItemLayout.postInvalidate()
+                recyclerView.postInvalidate()
+                holder.oldUserLayout.postInvalidate()
 
                 holder.createNoteButton.text = context.resources.getString(R.string.create_note_text)
                 prepareButtons
-                /*val intent = Intent(context, NotesActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)*/
             }
         }
     }

@@ -5,10 +5,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,9 +26,7 @@ import com.easyeducation.schooldiary.DiaryActivity.Companion.month1
 import com.easyeducation.schooldiary.DiaryActivity.Companion.time
 import com.easyeducation.schooldiary.DiaryActivity.Companion.year2
 import com.easyeducation.schooldiary.EnterActivity.Companion.writableDB
-import kotlinx.android.synthetic.main.activity_diary.view.*
 import kotlinx.android.synthetic.main.card_view_layout.view.*
-import kotlinx.android.synthetic.main.fragment_today.view.*
 import java.text.DateFormatSymbols
 import java.util.*
 import kotlin.collections.ArrayList
@@ -846,14 +842,6 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
             holder.blackoutLayout.visibility = View.INVISIBLE
             holder.blackoutLayout.isClickable = false
         }
-
-        //Won't be implemented now
-        /*val layoutParamsForSpace =  ViewGroup.LayoutParams//DiaryActivity.recyclerView.layoutParams
-        layoutParamsForSpace.height = 3
-        val space = Space(context)
-        space.setBackgroundColor(Color.GREEN)
-        space.layoutParams = layoutParamsForSpace
-        DiaryActivity.recyclerView.addView(space)*/
     }
 
         class ViewHolder(view1: View) : RecyclerView.ViewHolder(view1) {
