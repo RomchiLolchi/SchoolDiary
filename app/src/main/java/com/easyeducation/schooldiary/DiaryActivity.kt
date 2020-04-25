@@ -656,7 +656,6 @@ class DiaryActivity : AppCompatActivity() {
                 cursor.close()
                 setVisParams(false, createLessonLayout)
                 prepareButtons(needToClear = true)
-                //TODO Сделать так, чтобы при не вводе данных урок не добавлялся
                 //TODO Закрыть БД после использования
             }
         }
@@ -688,22 +687,12 @@ class DiaryActivity : AppCompatActivity() {
                         curs.moveToFirst()
                         if(curs.count > 0 && curs.getString(curs.getColumnIndex("name")) != null && curs.getString(curs.getColumnIndex("name")).isNotEmpty() && curs.getString(curs.getColumnIndex("name")).isNotBlank()){
                             Log.d("DB debug", "First line in table: ${curs.getString(curs.getColumnIndex("name"))}")
-                            curs = readableDB.rawQuery("SELECT name FROM LESSONS_CARDS WHERE dayOfWeek=2", null)
-                            curs.moveToFirst()
-                            if(curs.count > 0 && curs.getString(curs.getColumnIndex("name")) != null && curs.getString(curs.getColumnIndex("name")).isNotEmpty() && curs.getString(curs.getColumnIndex("name")).isNotBlank()){
-                                Log.d("DB debug", "First line in table: ${curs.getString(curs.getColumnIndex("name"))}")
-                                Log.d("Check without error", "No errors!")
-                                curs.close()
-                                return true
-                            }
-                            else{
-                                Log.e("Check error", "Error in sixth if block in check!")
-                                curs.close()
-                                return false
-                            }
+                            Log.d("Check without error", "No errors!")
+                            curs.close()
+                            return true
                         }
                         else{
-                            Log.e("Check error", "Error in fifth if block in check!")
+                            Log.e("Check error", "Error in sixth if block in check!")
                             curs.close()
                             return false
                         }

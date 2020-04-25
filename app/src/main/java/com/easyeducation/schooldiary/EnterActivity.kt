@@ -37,7 +37,7 @@ class EnterActivity : AppCompatActivity() {
 
         @JvmStatic
         fun createHelper(context: Context) {
-            helper = DBHelper(context, "DiaryDB", null, 5)
+            helper = DBHelper(context, "DiaryDB", null, 6)
         }
 
         /**Переменная дисплея (для получения ширины и высоты)*/
@@ -89,6 +89,10 @@ class EnterActivity : AppCompatActivity() {
         val buttonToNotes = findViewById<ImageView>(R.id.image_open_notes)
         buttonToNotes.setOnClickListener {
             startActivity(Intent(this, NotesActivity::class.java))
+        }
+        val buttonToSettings = findViewById<ImageView>(R.id.settings_image)
+        buttonToSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         display = windowManager.defaultDisplay

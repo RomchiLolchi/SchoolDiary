@@ -38,6 +38,14 @@
     <string name="delete_text" tools:ignore="MissingTranslation">Delete</string>
     <string name="close_text" tools:ignore="MissingTranslation">Close</string>
     <string name="alert_of_creating_empty_note" tools:ignore="MissingTranslation">Empty note has been deleted</string>
+    <string name="duration_of_lesson_text" tools:ignore="MissingTranslation">Duration of lesson:</string>
+    <string name="lesson_different_duration_text" tools:ignore="MissingTranslation">Duration of lesson on saturday is different</string>
+    <string name="duration_of_lesson_on_saturday_text" tools:ignore="MissingTranslation">Duration of lesson on saturday:</string>
+    <string name="clear_notes_table_text" tools:ignore="MissingTranslation">Clear all notes</string>
+    <string name="clear_lessons_table_text" tools:ignore="MissingTranslation">Clear all lessons</string>
+    <string name="all_notes_deleted_text" tools:ignore="MissingTranslation">All notes have been deleted</string>
+    <string name="all_lessons_deleted_text" tools:ignore="MissingTranslation">All lessons have been deleted</string>
+    <string name="min_text" tools:ignore="MissingTranslation">min.</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text" tools:ignore="MissingTranslation">Monday</string>

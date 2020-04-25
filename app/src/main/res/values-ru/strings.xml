@@ -39,6 +39,14 @@
     <string name="keep_text">Оставить</string>
     <string name="close_text">Закрыть</string>
     <string name="alert_of_creating_empty_note">Пустая заметка была удалена</string>
+    <string name="duration_of_lesson_text">Продолжительность урока:</string>
+    <string name="lesson_different_duration_text">Продолжительность урока в субботу отличается</string>
+    <string name="duration_of_lesson_on_saturday_text">Продолжительность урока в субботу:</string>
+    <string name="clear_notes_table_text">Удалить все заметки</string>
+    <string name="clear_lessons_table_text">Удалить все уроки</string>
+    <string name="all_notes_deleted_text">Все заметки были удалены</string>
+    <string name="all_lessons_deleted_text">Все уроки были удалены</string>
+    <string name="min_text">мин.</string>
 
     <!-- Переменные дней недели -->
     <string name="monday_text">Понедельник</string>

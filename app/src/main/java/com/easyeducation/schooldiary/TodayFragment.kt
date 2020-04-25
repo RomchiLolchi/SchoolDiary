@@ -170,9 +170,8 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
     private val layoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private val view = layoutInflater.inflate(R.layout.card_view_layout, null)
-    //TODO Сделать получение длительности урока из настроек
     /**Переменная длительности урока*/
-    val minutesOfLesson = 45
+    var minutesOfLesson = SettingsActivity.lessonDuration
     val recyclerView = recycler
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -202,6 +201,22 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
         holder.deleteCard.visibility = View.GONE
         holder.deleteCard.isClickable = false
 
+        val timeCursor = EnterActivity.readableDB.rawQuery("SELECT * FROM SETTINGS WHERE _id=1", null)
+        timeCursor.moveToFirst()
+        val isDifferent: Boolean
+        isDifferent = when(timeCursor.getInt(timeCursor.getColumnIndex("isSaturdayWorkingDay"))) {
+            0 -> false
+            1 -> true
+            else -> false
+        }
+        if(array[position].dayOfWeek == "2" && isDifferent) {
+            minutesOfLesson = timeCursor.getInt(timeCursor.getColumnIndex("saturdayLessonsDuration"))
+        }
+        else{
+            minutesOfLesson = timeCursor.getInt(timeCursor.getColumnIndex("lessonsDuration"))
+        }
+        timeCursor.close()
+
         view.basic_information_of_card_view.layoutParams = ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             standardHeight
@@ -230,19 +245,19 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
         }
         val firstPart = StringBuilder(array[position].time)
         firstPart.delete(2, 5)
-        if (secondPart.toString().toInt() + 45 >= 60) {
-            if (((secondPart.toString().toInt() + 45) - 60).toString().length == 1) {
+        if (secondPart.toString().toInt() + minutesOfLesson >= 60) {
+            if (((secondPart.toString().toInt() + minutesOfLesson) - 60).toString().length == 1) {
                 val stringBuild =
-                    StringBuilder(((secondPart.toString().toInt() + 45) - 60).toString())
+                    StringBuilder(((secondPart.toString().toInt() + minutesOfLesson) - 60).toString())
                 holder.timeOfLesson.text =
                     "$firstPart:$secondPart-${(firstPart.toString().toInt() + 1)}:0$stringBuild"
             } else {
                 holder.timeOfLesson.text =
-                    "$firstPart:$secondPart-${(firstPart.toString().toInt() + 1)}:${((secondPart.toString().toInt() + 45) - 60)}"
+                    "$firstPart:$secondPart-${(firstPart.toString().toInt() + 1)}:${((secondPart.toString().toInt() + minutesOfLesson) - 60)}"
             }
         } else {
             holder.timeOfLesson.text =
-                "$firstPart:$secondPart-$firstPart:${secondPart.toString().toInt() + 45}"
+                "$firstPart:$secondPart-$firstPart:${secondPart.toString().toInt() + minutesOfLesson}"
         }
         view.invalidate()
         holder.nameOfLesson.text = array[position].name
@@ -700,19 +715,19 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                     }
                     val first = StringBuilder(array[position].time)
                     first.delete(2, 5)
-                    if (second.toString().toInt() + 45 >= 60) {
-                        if (((second.toString().toInt() + 45) - 60).toString().length == 1) {
+                    if (second.toString().toInt() + minutesOfLesson >= 60) {
+                        if (((second.toString().toInt() + minutesOfLesson) - 60).toString().length == 1) {
                             val stringBuild =
-                                StringBuilder(((second.toString().toInt() + 45) - 60).toString())
+                                StringBuilder(((second.toString().toInt() + minutesOfLesson) - 60).toString())
                             holder.timeOfLesson.text =
                                 "$first:$second-${(first.toString().toInt() + 1)}:0$stringBuild"
                         } else {
                             holder.timeOfLesson.text =
-                                "$first:$second-${(first.toString().toInt() + 1)}:${((second.toString().toInt() + 45) - 60)}"
+                                "$first:$second-${(first.toString().toInt() + 1)}:${((second.toString().toInt() + minutesOfLesson) - 60)}"
                         }
                     } else {
                         holder.timeOfLesson.text =
-                            "$first:$second-$first:${second.toString().toInt() + 45}"
+                            "$first:$second-$first:${second.toString().toInt() + minutesOfLesson}"
                     }
                     holder.teacher.text = values.getAsString("teacher")
                     holder.ratingBarOne.rating = values.getAsFloat("ratingOne")

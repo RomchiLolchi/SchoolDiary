@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 class DBHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, name, factory, version) {
 
     override fun onCreate(db: SQLiteDatabase?){
-        onUpgrade(db, 4, 5)
+        onUpgrade(db, 5, 6)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -25,6 +25,8 @@ class DBHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorF
             db?.execSQL("CREATE TABLE NOTES (_id INTEGER PRIMARY KEY AUTOINCREMENT, headline TEXT, mainText TEXT, time TEXT, date TEXT, color TEXT)")
             db?.execSQL("DROP TABLE TIMETABLE")
         }
+        if(newVersion >= 6){
+            db?.execSQL("CREATE TABLE SETTINGS (_id INTEGER PRIMARY KEY AUTOINCREMENT, lessonsDuration INTEGER, isSaturdayWorkingDay INTEGER, saturdayLessonsDuration INTEGER);")
+        }
     }
-
 }
