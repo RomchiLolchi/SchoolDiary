@@ -447,6 +447,9 @@ class DiaryActivity : AppCompatActivity() {
                     ratingBar2.rating = 0F
                     ratingBarsAmount--
                 }
+                else {
+                    ratingBar.rating = 0F
+                }
                 val inputManager = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(this.currentFocus?.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
             }
@@ -656,7 +659,6 @@ class DiaryActivity : AppCompatActivity() {
                 cursor.close()
                 setVisParams(false, createLessonLayout)
                 prepareButtons(needToClear = true)
-                //TODO Закрыть БД после использования
             }
         }
 

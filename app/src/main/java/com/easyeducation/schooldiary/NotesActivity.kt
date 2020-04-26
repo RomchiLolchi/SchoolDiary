@@ -39,6 +39,7 @@ class NotesActivity : AppCompatActivity() {
 
     companion object{
         @JvmStatic
+        /**Цвет заметки*/
         var color: String = "white"
         @JvmStatic
         lateinit var recyclerView: RecyclerView
@@ -52,6 +53,7 @@ class NotesActivity : AppCompatActivity() {
         lateinit var createNoteLayout: ConstraintLayout
 
         @JvmStatic
+
         fun isOldUser() : Boolean {
             val curs = EnterActivity.readableDB.rawQuery("SELECT * FROM NOTES", null)
             if(curs.count > 0 && curs.moveToFirst()) {

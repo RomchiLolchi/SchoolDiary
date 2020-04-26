@@ -646,19 +646,12 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                     val inputManager = contextVar.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
-                    var isNeedToUpdate = false
-                    if((objects[3] as EditText).text.toString() != array[position].order){
-                        isNeedToUpdate = true
-                    }
-
-                    time = array[position].time
-                    date = array[position].date
-
                     if(time == "time"){
                         time = "12:0"
                     }
                     if(date == "date"){
-                        date = "1.0.2019"
+                        val calendar = Calendar.getInstance()
+                        date = "${calendar.get(Calendar.DAY_OF_MONTH)}.${calendar.get(Calendar.MONTH)}.${calendar.get(Calendar.YEAR)}"
                     }
                     if((objects[3] as EditText).text.toString().isNullOrBlank() || (objects[3] as EditText).text.toString().isNullOrEmpty()){ //order_lesson_editText
                         (objects[3] as EditText).text = SpannableStringBuilder("1")
@@ -808,6 +801,7 @@ class LessonsAdapter(contextO: Context, arrayO: ArrayList<Lesson>, modeVar: Stri
                             holder.colorCard.setImageDrawable(contextVar.resources.getDrawable(R.drawable.violet_rect))
                         }
                     }
+                    val isNeedToUpdate: Boolean = true
                     if(isNeedToUpdate) {
                         recyclerView.adapter = LessonsAdapter(
                             contextVar,
